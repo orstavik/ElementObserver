@@ -1,17 +1,13 @@
 <script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
-<script src="../ConstructionFrame.js"></script>
+<script src="../ElementObserver.js"></script>
 <script>
-  function* allNodes(n = document.documentElement) {
-    yield n;
-    for (let c of n.childNodes || [])
-      yield* allNodes(c);
-  }
-
-  let endedNodes = [...allNodes()];
+  let endedElements = [];
 
   function printFrame(frame) {
-    endedNodes.push(...frame.nodes());
-    console.log(frame + "", [...allNodes()].filter(n => endedNodes.indexOf(n) === -1).map(n => n.nodeName));
+    const nowEnded = [...frame.elements()].filter(n => endedElements.indexOf(n) !== -1);
+    if(nowEnded.length)
+      console.log(frame.toString(), nowEnded);
+    endedElements.push(...frame.nodes());
   }
 
   ConstructionFrame.observe('end', printFrame);

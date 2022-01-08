@@ -1,21 +1,23 @@
 <script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
-<script src="../ConstructionFrame.js"></script>
+<script src="../ElementObserver.js"></script>
 <script>
-  (function () {
-    let count = 0;
+  let endedNodes = [];
 
-    ConstructionFrame.observe('start', frame => console.log(`${frame.__id ??= ++count} ${frame}`));
-    ConstructionFrame.observe('end', frame => console.log(`${frame.__id} ${frame}`));
-    ConstructionFrame.observe('complete', frame => console.log(`${frame.__id} ${frame}`));
+  function printFrame(frame) {
+    const nowEnded = [...frame.nodes()].filter(n => endedNodes.indexOf(n) !== -1);
+    if(nowEnded.length)
+      console.log(frame.toString(), nowEnded);
+    endedNodes.push(...frame.nodes());
+  }
 
-    customElements.define('web-comp', class WebComp extends HTMLElement {
-      constructor() {
-        super();
-        const frame = ConstructionFrame.now;
-        console.log(`constructor ${frame.__id} ${frame}`);
-      }
-    });
-  })();
+  ConstructionFrame.observe('end', printFrame);
+
+  customElements.define('web-comp', class WebComp extends HTMLElement {
+    constructor() {
+      super();
+      console.log("constructor");
+    }
+  });
 </script>
 
 <h3>This is a test of siblings</h3>
