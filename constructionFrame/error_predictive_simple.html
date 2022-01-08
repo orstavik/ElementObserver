@@ -1,0 +1,23 @@
+<script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
+<script src="../ConstructionFrame.js"></script>
+<script>
+  (function () {
+
+    window.addEventListener('error', e => e.preventDefault());
+    window.addEventListener('error', _ => console.log('error'));
+
+    ConstructionFrame.observe('start', f => console.log(f.toString()));
+    ConstructionFrame.observe('end', f => console.log(f.toString()));
+    ConstructionFrame.observe('complete', f => console.log(f.toString()));
+
+    customElements.define('web-comp', class WebComp extends HTMLElement {
+      constructor() {
+        super();
+        console.log("constructor");
+        throw new Error();
+      }
+    });
+  })();
+</script>
+
+<web-comp></web-comp>
