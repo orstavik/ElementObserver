@@ -16,18 +16,18 @@
 
     let once = 1;
 
-    ConstructionFrame.observe('start', printFrame);
-    ConstructionFrame.observe('end', printFrame);
-    ConstructionFrame.observe('complete', printFrame);
+    ElementObserver.observe('start', printFrame);
+    ElementObserver.observe('end', printFrame);
+    ElementObserver.observe('complete', printFrame);
 
     class AttributeComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ConstructionFrame.now, '-constructor-inner');
+        printFrame(ElementObserver.now, '-constructor-inner');
       }
 
       attributeChangedCallback() {
-        printFrame(ConstructionFrame.now, '-attribute-inner');
+        printFrame(ElementObserver.now, '-attribute-inner');
         throw new Error('test error');
       }
 
@@ -41,7 +41,7 @@
     class OnceComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ConstructionFrame.now, '-constructor-inner');
+        printFrame(ElementObserver.now, '-constructor-inner');
         if (!once--) throw new Error('test error');
       }
     }
@@ -51,13 +51,13 @@
     class OuterComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ConstructionFrame.now, '-outer-constructor');
+        printFrame(ElementObserver.now, '-outer-constructor');
         this.attachShadow({mode: "open"});
         const once = document.createElement('once-comp');
         once.cloneNode(); //throws
         this.shadowRoot.innerHTML = '<div></div><attribute-comp a></attribute-comp>';  //throws
         this.shadowRoot.children[0].insertAdjacentHTML('afterbegin', '<attribute-comp a></attribute-comp>'); //throws
-        printFrame(ConstructionFrame.now, '-outer-constructor-end');
+        printFrame(ElementObserver.now, '-outer-constructor-end');
       }
     }
 

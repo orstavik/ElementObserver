@@ -6,14 +6,14 @@
     window.addEventListener('error', e => e.preventDefault());
     window.addEventListener('error', _ => console.log('error'));
 
-    ConstructionFrame.observe('start', f => console.log(f.toString()));
-    ConstructionFrame.observe('end', f => console.log(f.toString()));
-    ConstructionFrame.observe('complete', f => console.log(f.toString()));
+    ElementObserver.observe('start', f => console.log(f.toString()));
+    ElementObserver.observe('end', f => console.log(f.toString()));
+    ElementObserver.observe('complete', f => console.log(f.toString()));
 
     class InnerComp extends HTMLElement {
       constructor() {
         super();
-        console.log(`${ConstructionFrame.now} constructor-inner`.toString())
+        console.log(`${ElementObserver.now} constructor-inner`.toString())
         throw new Error('test error');
       }
     }
@@ -23,7 +23,7 @@
     class OuterComp extends HTMLElement {
       constructor() {
         super();
-        console.log(`${ConstructionFrame.now} constructor-outer`.toString())
+        console.log(`${ElementObserver.now} constructor-outer`.toString())
         this.attachShadow({mode: "open"});
         document.createElement('inner-comp');
       }

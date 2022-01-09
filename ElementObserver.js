@@ -1,7 +1,8 @@
 (function initConstructionFrameAPI() {
   const OG = {};
-  
-  /*window.MonkeyPatch = */class MonkeyPatch {
+
+  /*window.MonkeyPatch = */
+  class MonkeyPatch {
     static monkeyPatch(proto, prop, fun) {
       const descriptor = Object.getOwnPropertyDescriptor(proto, prop);
       const og = OG[proto.constructor.name + '.' + prop] = descriptor.value;
@@ -43,14 +44,32 @@
   }
 
   let now;
+  const observers = {'start': [], 'end': [], 'complete': []};
 
-  class ConstructionFrame {
+  window.ElementObserver = class ElementObserver {
+    static get now() {
+      return now;
+    }
+
+    static dropNow() {
+      now = undefined;
+    }
+
+    static disconnect(state, cb) { //todo untested
+      const pos = observers[state].indexOf(cb);
+      pos >= 0 && observers[state].splice(pos, 1);
+    }
+
+    static observe(state, cb) {
+      observers[state].push(cb);
+    }
+  }
+
+  window.ConstructionFrame = class ConstructionFrame {
 
     #children = [];
     #parent;
     #state;
-
-    static #observers = {'start': [], 'end': [], 'complete': []};
 
     constructor() {
       this.#parent = now;
@@ -60,7 +79,7 @@
     }
 
     #callObservers(state) {
-      ConstructionFrame.#observers[this.#state = state].forEach(cb => cb(this));
+      observers[this.#state = state].forEach(cb => cb(this));
     }
 
     #complete() {
@@ -81,31 +100,12 @@
       return parent + this.constructor.name.slice(0, -17) + '#' + this.#state;
     }
 
-    static get now() {
-      return now;
-    }
-
-    static dropNow() {
-      now = undefined;
-    }
-
-    static observe(state, cb) {
-      this.#observers[state].push(cb);
-    }
-
-    static disconnect(state, cb) {
-      const pos = this.#observers[state].indexOf(cb);
-      pos >= 0 && this.#observers[state].splice(pos, 1);
-    }
-
     end() {
       this.#callObservers('end');
       !this.#parent && this.#complete();
       now = this.#parent;
     }
   }
-
-  window.ConstructionFrame = ConstructionFrame;
 
   function* recursiveNodes(n) {
     yield n;
@@ -241,9 +241,10 @@
     frame.end({position, element: this, previousSibling, lastChild, firstChild, nextSibling});
   });
 // })();
-/*
- * UPGRADE, depends on ConstructionFrame
- */
+  /*
+   * UPGRADE, depends on ConstructionFrame
+   */
+
 // (function () {
   class UpgradeConstructionFrame extends ConstructionFrame {
     #tagName;
@@ -273,19 +274,19 @@
   MonkeyPatch.monkeyPatch(CustomElementRegistry.prototype, "define", function createElement_constructionFrame(og, ...args) {
     new UpgradeConstructionFrame(args[0]);
     og.call(this, ...args);
-    ConstructionFrame.now.end();
+    ElementObserver.now.end();
   });
 
   window.HTMLElement = class UpgradeConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
       super();
-      ConstructionFrame.now instanceof UpgradeConstructionFrame && ConstructionFrame.now.chain(this);
+      ElementObserver.now instanceof UpgradeConstructionFrame && ElementObserver.now.chain(this);
     }
   }
 // })();
-/*
- * PREDICTIVE PARSER, depends on UPGRADE
- */
+  /*
+   * PREDICTIVE PARSER, depends on UPGRADE
+   */
 // (function () {
 
   if (document.readyState !== 'loading')
@@ -368,7 +369,7 @@
       const frame = frames.shift();
       frame.end(roots);
     }
-    ConstructionFrame.dropNow();
+    ElementObserver.dropNow();
     //todo Now we calculate the full list of nodes for the new FarserFrame. We only need to calculate that it has one, and then calculate the rest when queried.
     //todo so this might be made slightly more efficient.
     const addedNodes = [...e.endedNodes()].filter(n => roots.findIndex(s => s === n || s.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_CONTAINED_BY) === -1);
@@ -382,7 +383,7 @@
   class PredictiveConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
       super();
-      if (!ConstructionFrame.now) {
+      if (!ElementObserver.now) {
         frames.unshift(new PredictiveConstructionFrame(this));
         roots.push(this);
       }

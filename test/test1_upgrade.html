@@ -35,14 +35,14 @@
       console.log(frame.__id ??= ++count, frame + type);
     }
 
-    ConstructionFrame.observe('start', printFrame);
-    ConstructionFrame.observe('end', printFrame);
-    ConstructionFrame.observe('complete', printFrame);
+    ElementObserver.observe('start', printFrame);
+    ElementObserver.observe('end', printFrame);
+    ElementObserver.observe('complete', printFrame);
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ConstructionFrame.now, '-constructor');
+        printFrame(ElementObserver.now, '-constructor');
       }
     });
   })();

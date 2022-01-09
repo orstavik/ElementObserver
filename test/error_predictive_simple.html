@@ -6,9 +6,9 @@
     window.addEventListener('error', e => e.preventDefault());
     window.addEventListener('error', _ => console.log('error'));
 
-    ConstructionFrame.observe('start', f => console.log(f.toString()));
-    ConstructionFrame.observe('end', f => console.log(f.toString()));
-    ConstructionFrame.observe('complete', f => console.log(f.toString()));
+    ElementObserver.observe('start', f => console.log(f.toString()));
+    ElementObserver.observe('end', f => console.log(f.toString()));
+    ElementObserver.observe('complete', f => console.log(f.toString()));
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {

@@ -14,7 +14,7 @@
     console.log(frame + "", [...allElements()].filter(n => endedElements.indexOf(n) === -1).map(n => n.nodeName));
   }
 
-  ConstructionFrame.observe('end', printFrame);
+  ElementObserver.observe('end', printFrame);
 
   customElements.define('web-comp', class WebComp extends HTMLElement {
     constructor() {
