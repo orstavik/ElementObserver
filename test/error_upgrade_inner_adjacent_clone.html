@@ -10,24 +10,24 @@
 
     window.addEventListener('error', e => (console.log('error') & e.preventDefault()));
 
-    function printFrame(frame, type = '') {
+    function printFrame({frame}, type = '') {
       console.log(frame + type);
     }
 
     let once = 1;
 
-    ElementObserver.observe('start', printFrame);
-    ElementObserver.observe('end', printFrame);
-    ElementObserver.observe('complete', printFrame);
+    window.addEventListener('construction-start', printFrame);
+    window.addEventListener('construction-end', printFrame);
+    window.addEventListener('construction-complete', printFrame);
 
     class AttributeComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ElementObserver.now, '-constructor-inner');
+        printFrame({frame: elementConstructionFrame}, '-constructor-inner');
       }
 
       attributeChangedCallback() {
-        printFrame(ElementObserver.now, '-attribute-inner');
+        printFrame({frame: elementConstructionFrame}, '-attribute-inner');
         throw new Error('test error');
       }
 
@@ -41,7 +41,7 @@
     class OnceComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ElementObserver.now, '-constructor-inner');
+        printFrame({frame: elementConstructionFrame}, '-constructor-inner');
         if (!once--) throw new Error('test error');
       }
     }
@@ -51,13 +51,13 @@
     class OuterComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ElementObserver.now, '-outer-constructor');
+        printFrame({frame: elementConstructionFrame}, '-outer-constructor');
         this.attachShadow({mode: "open"});
         const once = document.createElement('once-comp');
         once.cloneNode(); //throws
         this.shadowRoot.innerHTML = '<div></div><attribute-comp a></attribute-comp>';  //throws
         this.shadowRoot.children[0].insertAdjacentHTML('afterbegin', '<attribute-comp a></attribute-comp>'); //throws
-        printFrame(ElementObserver.now, '-outer-constructor-end');
+        printFrame({frame: elementConstructionFrame}, '-outer-constructor-end');
       }
     }
 

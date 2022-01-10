@@ -44,28 +44,14 @@
   }
 
   let now;
-  const observers = {'start': [], 'end': [], 'complete': []};
 
-  window.ElementObserver = class ElementObserver {
-    static get now() {
+  Object.defineProperty(window, 'elementConstructionFrame', {
+    get: function () {
       return now;
     }
+  });
 
-    static dropNow() {
-      now = undefined;
-    }
-
-    static disconnect(state, cb) { //todo untested
-      const pos = observers[state].indexOf(cb);
-      pos >= 0 && observers[state].splice(pos, 1);
-    }
-
-    static observe(state, cb) {
-      observers[state].push(cb);
-    }
-  }
-
-  window.ConstructionFrame = class ConstructionFrame {
+  class ConstructionFrame {
 
     #children = [];
     #parent;
@@ -79,7 +65,9 @@
     }
 
     #callObservers(state) {
-      observers[this.#state = state].forEach(cb => cb(this));
+      const e = new Event('construction-' + (this.#state = state));
+      e.frame = this;
+      window.dispatchEvent(e);
     }
 
     #complete() {
@@ -262,6 +250,10 @@
       new UpgradeConstructionFrame(this.#tagName, el);   //and start a new frame
     }
 
+    // end(){     //todo this would enable us to have empty UpgradeConstructionFrame, which might often occur and which shouldn't trigger any Frame-ing.
+    //   if(!this.#el) ElementObserver.dropNow();
+    //   else super.end();
+    // }
     * nodes() {
       if (this.#el) yield this.#el;
     }
@@ -274,13 +266,13 @@
   MonkeyPatch.monkeyPatch(CustomElementRegistry.prototype, "define", function createElement_constructionFrame(og, ...args) {
     new UpgradeConstructionFrame(args[0]);
     og.call(this, ...args);
-    ElementObserver.now.end();
+    now.end();
   });
 
   window.HTMLElement = class UpgradeConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
       super();
-      ElementObserver.now instanceof UpgradeConstructionFrame && ElementObserver.now.chain(this);
+      now instanceof UpgradeConstructionFrame && now.chain(this);
     }
   }
 // })();
@@ -369,7 +361,7 @@
       const frame = frames.shift();
       frame.end(roots);
     }
-    ElementObserver.dropNow();
+    now = undefined;
     //todo Now we calculate the full list of nodes for the new FarserFrame. We only need to calculate that it has one, and then calculate the rest when queried.
     //todo so this might be made slightly more efficient.
     const addedNodes = [...e.endedNodes()].filter(n => roots.findIndex(s => s === n || s.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_CONTAINED_BY) === -1);
@@ -383,7 +375,7 @@
   class PredictiveConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
       super();
-      if (!ElementObserver.now) {
+      if (!now) {
         frames.unshift(new PredictiveConstructionFrame(this));
         roots.push(this);
       }

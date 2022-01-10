@@ -4,14 +4,18 @@
   (function () {
     let count = 0;
 
-    ElementObserver.observe('start', frame => console.log(`${frame.__id ??= ++count} ${frame}`));
-    ElementObserver.observe('end', frame => console.log(`${frame.__id} ${frame}`));
-    ElementObserver.observe('complete', frame => console.log(`${frame.__id} ${frame}`));
+    function printFrame({frame}) {
+      return console.log(`${frame.__id ??= ++count} ${frame}`);
+    }
+
+    window.addEventListener('construction-start', printFrame);
+    window.addEventListener('construction-end', printFrame);
+    window.addEventListener('construction-complete', printFrame);
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {
         super();
-        const frame = ElementObserver.now;
+        const frame = elementConstructionFrame;
         console.log(`constructor ${frame.__id} ${frame}`);
       }
     });

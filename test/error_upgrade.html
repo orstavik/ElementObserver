@@ -10,18 +10,18 @@
 
     window.addEventListener('error', e => (console.log('error') & e.preventDefault()));
 
-    function printFrame(frame, type = '') {
+    function printFrame({frame}, type = '') {
       console.log(frame + type);
     }
 
-    ElementObserver.observe('start', printFrame);
-    ElementObserver.observe('end', printFrame);
-    ElementObserver.observe('complete', printFrame);
+    window.addEventListener('construction-start', printFrame);
+    window.addEventListener('construction-end', printFrame);
+    window.addEventListener('construction-complete', printFrame);
 
     class WebComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ElementObserver.now, '-constructor-inner');
+        printFrame({frame: elementConstructionFrame}, '-constructor-inner');
         throw new Error('test error');
       }
     }

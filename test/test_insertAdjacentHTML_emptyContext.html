@@ -2,7 +2,7 @@
 <script src="../ElementObserver.js"></script>
 
 <script>
-  ElementObserver.observe('end', frame => console.log([...frame.nodes()].map(n => n.nodeName)));
+  window.addEventListener('construction-end', ({frame}) => console.log([...frame.nodes()].map(n => n.nodeName)));
 </script>
 
 <div><h1></h1><span></span></div>

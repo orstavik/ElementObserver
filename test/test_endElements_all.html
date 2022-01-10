@@ -9,12 +9,12 @@
 
   const endedElements = [...allElements()];
 
-  function printFrame(frame) {
+  function printFrame({frame}) {
     endedElements.push(...frame.elements());
     console.log(frame + "", [...allElements()].filter(n => endedElements.indexOf(n) === -1).map(n => n.nodeName));
   }
 
-  ElementObserver.observe('end', printFrame);
+  window.addEventListener('construction-end', printFrame);
 
   customElements.define('web-comp', class WebComp extends HTMLElement {
     constructor() {

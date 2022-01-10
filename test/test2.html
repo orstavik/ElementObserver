@@ -4,35 +4,39 @@
   (function () {
     let count = 0;
 
-    ElementObserver.observe('start', frame => console.log(`${frame.__id ??= ++count} ${frame}`));
-    ElementObserver.observe('end', frame => console.log(`${frame.__id} ${frame}`));
-    ElementObserver.observe('complete', frame => console.log(`${frame.__id} ${frame}`));
+    function printFrame({frame}) {
+      return console.log(`${frame.__id ??= ++count} ${frame}`);
+    }
+
+    window.addEventListener('construction-start', printFrame);
+    window.addEventListener('construction-end', printFrame);
+    window.addEventListener('construction-complete', printFrame);
 
     customElements.define('inner-comp', class InnerComp extends HTMLElement {
       constructor() {
         super();
-        console.log(`${ElementObserver.now} constructor`);
+        console.log(`${elementConstructionFrame} constructor`);
       }
     });
     customElements.define('middle-comp', class MiddleComp extends HTMLElement {
       constructor() {
         super();
-        console.log(`${ElementObserver.now} constructor start`);
+        console.log(`${elementConstructionFrame} constructor start`);
         this.attachShadow({mode: "open"});
         this.shadowRoot.innerHTML = '<inner-comp></inner-comp>';
         this.shadowRoot.children[0].insertAdjacentHTML('afterend', '<h1></h1>');
-        console.log(`${ElementObserver.now.__id} constructor end`);
+        console.log(`${elementConstructionFrame.__id} constructor end`);
       }
     });
     customElements.define('outer-comp', class OuterComp extends HTMLElement {
       constructor() {
         super();
-        console.log(`${ElementObserver.now.__id} constructor start`);
+        console.log(`${elementConstructionFrame.__id} constructor start`);
         const a = document.createElement('middle-comp');
         const b = a.cloneNode();
         this.attachShadow({mode: "open"});
         this.shadowRoot.append(b);
-        console.log(`${ElementObserver.now.__id} constructor end`);
+        console.log(`${elementConstructionFrame.__id} constructor end`);
       }
     });
   })();

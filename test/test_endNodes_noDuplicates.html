@@ -3,14 +3,14 @@
 <script>
   let endedNodes = [];
 
-  function printFrame(frame) {
+  function printFrame({frame}) {
     const nowEnded = [...frame.nodes()].filter(n => endedNodes.indexOf(n) !== -1);
     if(nowEnded.length)
       console.log(frame.toString(), nowEnded);
     endedNodes.push(...frame.nodes());
   }
 
-  ElementObserver.observe('end', printFrame);
+  window.addEventListener('construction-end', printFrame);
 
   customElements.define('web-comp', class WebComp extends HTMLElement {
     constructor() {

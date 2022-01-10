@@ -30,19 +30,19 @@
   (function () {
     let count = 0;
 
-    function printFrame(frame, type = '') {
+    function printFrame({frame}, type = '') {
       frame.state === 'end' && (type = ('[' + Array.from(frame.nodes()).map(n => n.nodeName).join(',') + ']'));
       console.log(frame.__id ??= ++count, frame + type);
     }
 
-    ElementObserver.observe('start', printFrame);
-    ElementObserver.observe('end', printFrame);
-    ElementObserver.observe('complete', printFrame);
+    window.addEventListener('construction-start', printFrame);
+    window.addEventListener('construction-end', printFrame);
+    window.addEventListener('construction-complete', printFrame);
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ElementObserver.now, '-constructor');
+        printFrame({frame: elementConstructionFrame}, '-constructor');
       }
     });
   })();
