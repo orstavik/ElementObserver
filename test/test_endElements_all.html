@@ -1,5 +1,6 @@
+<script src="../MonkeyPatch/MonkeyPatch.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
-<script src="../ElementObserver.js"></script>
+<script src="constructionFrame.js"></script>
 <script>
   function* allElements(n = document.documentElement) {
     yield n;
@@ -9,12 +10,12 @@
 
   const endedElements = [...allElements()];
 
-  function printFrame({frame}) {
+  function printFrame(frame) {
     endedElements.push(...frame.elements());
     console.log(frame + "", [...allElements()].filter(n => endedElements.indexOf(n) === -1).map(n => n.nodeName));
   }
 
-  window.addEventListener('construction-end', printFrame);
+  ConstructionFrame.observe('end', printFrame);
 
   customElements.define('web-comp', class WebComp extends HTMLElement {
     constructor() {

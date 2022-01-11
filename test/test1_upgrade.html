@@ -25,24 +25,25 @@
 <web-comp></web-comp>
 
 <script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
-<script src="../ElementObserver.js"></script>
+<script src="../MonkeyPatch/MonkeyPatch.js"></script>
+<script src="constructionFrame.js"></script>
 <script>
   (function () {
     let count = 0;
 
-    function printFrame({frame}, type = '') {
-      frame.state === 'end' && (type = ('[' + Array.from(frame.nodes()).map(n => n.nodeName).join(',') + ']'));
+    function printFrame(frame, type = '') {
+      frame.state === 'end' && (type = ('[' + Array.from(frame.elements()).map(n => n.nodeName).join(',') + ']'));
       console.log(frame.__id ??= ++count, frame + type);
     }
 
-    window.addEventListener('construction-start', printFrame);
-    window.addEventListener('construction-end', printFrame);
-    window.addEventListener('construction-complete', printFrame);
+    ConstructionFrame.observe('start', printFrame);
+    ConstructionFrame.observe('end', printFrame);
+    ConstructionFrame.observe('complete', printFrame);
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {
         super();
-        printFrame({frame: elementConstructionFrame}, '-constructor');
+        printFrame(ConstructionFrame.now, '-constructor');
       }
     });
   })();

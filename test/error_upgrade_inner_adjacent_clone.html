@@ -1,5 +1,6 @@
 <script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
-<script src="../ElementObserver.js"></script>
+<script src="../MonkeyPatch/MonkeyPatch.js"></script>
+<script src="constructionFrame.js"></script>
 
 <attribute-comp a></attribute-comp>
 <outer-comp></outer-comp>
@@ -10,24 +11,24 @@
 
     window.addEventListener('error', e => (console.log('error') & e.preventDefault()));
 
-    function printFrame({frame}, type = '') {
+    function printFrame(frame, type = '') {
       console.log(frame + type);
     }
 
     let once = 1;
 
-    window.addEventListener('construction-start', printFrame);
-    window.addEventListener('construction-end', printFrame);
-    window.addEventListener('construction-complete', printFrame);
+    ConstructionFrame.observe('start', printFrame);
+    ConstructionFrame.observe('end', printFrame);
+    ConstructionFrame.observe('complete', printFrame);
 
     class AttributeComp extends HTMLElement {
       constructor() {
         super();
-        printFrame({frame: elementConstructionFrame}, '-constructor-inner');
+        printFrame(ConstructionFrame.now, '-constructor-inner');
       }
 
       attributeChangedCallback() {
-        printFrame({frame: elementConstructionFrame}, '-attribute-inner');
+        printFrame(ConstructionFrame.now, '-attribute-inner');
         throw new Error('test error');
       }
 
@@ -41,7 +42,7 @@
     class OnceComp extends HTMLElement {
       constructor() {
         super();
-        printFrame({frame: elementConstructionFrame}, '-constructor-inner');
+        printFrame(ConstructionFrame.now, '-constructor-inner');
         if (!once--) throw new Error('test error');
       }
     }
@@ -51,13 +52,13 @@
     class OuterComp extends HTMLElement {
       constructor() {
         super();
-        printFrame({frame: elementConstructionFrame}, '-outer-constructor');
+        printFrame(ConstructionFrame.now, '-outer-constructor');
         this.attachShadow({mode: "open"});
         const once = document.createElement('once-comp');
         once.cloneNode(); //throws
         this.shadowRoot.innerHTML = '<div></div><attribute-comp a></attribute-comp>';  //throws
         this.shadowRoot.children[0].insertAdjacentHTML('afterbegin', '<attribute-comp a></attribute-comp>'); //throws
-        printFrame({frame: elementConstructionFrame}, '-outer-constructor-end');
+        printFrame(ConstructionFrame.now, '-outer-constructor-end');
       }
     }
 

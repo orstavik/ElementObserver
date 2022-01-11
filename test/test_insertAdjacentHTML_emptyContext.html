@@ -1,8 +1,9 @@
 <script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
-<script src="../ElementObserver.js"></script>
+<script src="../MonkeyPatch/MonkeyPatch.js"></script>
+<script src="constructionFrame.js"></script>
 
 <script>
-  window.addEventListener('construction-end', ({frame}) => console.log([...frame.nodes()].map(n => n.nodeName)));
+  ConstructionFrame.observe('end', frame => console.log([...frame.nodes()].map(n => n.nodeName)));
 </script>
 
 <div><h1></h1><span></span></div>

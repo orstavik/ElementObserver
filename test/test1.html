@@ -1,22 +1,22 @@
 <script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
-<script src="../ElementObserver.js"></script>
+<script src="../MonkeyPatch/MonkeyPatch.js"></script>
+<script src="constructionFrame.js"></script>
 <script>
   (function () {
     let count = 0;
 
-    function printFrame({frame}) {
-      return console.log(`${frame.__id ??= ++count} ${frame}`);
+    function printFrame(frame, msg = '') {
+      console.log(`${msg}${frame.__id ??= ++count} ${frame}`);
     }
 
-    window.addEventListener('construction-start', printFrame);
-    window.addEventListener('construction-end', printFrame);
-    window.addEventListener('construction-complete', printFrame);
+    ConstructionFrame.observe('start', printFrame);
+    ConstructionFrame.observe('end', printFrame);
+    ConstructionFrame.observe('complete', printFrame);
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {
         super();
-        const frame = elementConstructionFrame;
-        console.log(`constructor ${frame.__id} ${frame}`);
+        printFrame(ConstructionFrame.now, "constructor ");
       }
     });
   })();

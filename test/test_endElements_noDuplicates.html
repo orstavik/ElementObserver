@@ -1,16 +1,17 @@
+<script src="../MonkeyPatch/MonkeyPatch.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
-<script src="../ElementObserver.js"></script>
+<script src="constructionFrame.js"></script>
 <script>
   let endedElements = [];
 
-  function printFrame({frame}) {
+  function printFrame(frame) {
     const nowEnded = [...frame.elements()].filter(n => endedElements.indexOf(n) !== -1);
     if(nowEnded.length)
       console.log(frame.toString(), nowEnded);
     endedElements.push(...frame.nodes());
   }
 
-  window.addEventListener('construction-end', printFrame);
+  ConstructionFrame.observe('end', printFrame);
 
   customElements.define('web-comp', class WebComp extends HTMLElement {
     constructor() {

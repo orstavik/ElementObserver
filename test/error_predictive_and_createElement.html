@@ -1,23 +1,20 @@
 <script src="https://cdn.jsdelivr.net/gh/orstavik/parse/parse.js"></script>
-<script src="../ElementObserver.js"></script>
+<script src="../MonkeyPatch/MonkeyPatch.js"></script>
+<script src="constructionFrame.js"></script>
 <script>
   (function () {
 
     window.addEventListener('error', e => e.preventDefault());
     window.addEventListener('error', _ => console.log('error'));
 
-    function printFrame({frame}) {
-      return console.log(frame.toString());
-    }
-
-    window.addEventListener('construction-start', printFrame);
-    window.addEventListener('construction-end', printFrame);
-    window.addEventListener('construction-complete', printFrame);
+    ConstructionFrame.observe('start', f => console.log(f.toString()));
+    ConstructionFrame.observe('end', f => console.log(f.toString()));
+    ConstructionFrame.observe('complete', f => console.log(f.toString()));
 
     class InnerComp extends HTMLElement {
       constructor() {
         super();
-        console.log(`${elementConstructionFrame} constructor-inner`.toString())
+        console.log(`${ConstructionFrame.now} constructor-inner`.toString())
         throw new Error('test error');
       }
     }
@@ -27,7 +24,7 @@
     class OuterComp extends HTMLElement {
       constructor() {
         super();
-        console.log(`${elementConstructionFrame} constructor-outer`.toString())
+        console.log(`${ConstructionFrame.now} constructor-outer`.toString())
         this.attachShadow({mode: "open"});
         document.createElement('inner-comp');
       }
