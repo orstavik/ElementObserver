@@ -1,129 +1,124 @@
 <h3>ConstructionFrame</h3>
 <test-html test="test1.html">
-<!--  probable bug..
-      no. It is behavior as wanted. Because if not, then we can have a very long wait. before the view update.
-      "8 Predictive#end",
-      "8 Predictive#complete",
-      "7 Predictive#end",
-      "7 Predictive#complete",
-      Shouldn't it be
-      8 end,
-      7 end,
-      7 complete,
-      8 complete
-
-      and same with 10 and 11?
- -->
+  <!--  probable bug..
+        no. It is behavior as wanted. Because if not, then we can have a very long wait. before the view update.
+        "8 Predictive#end",
+        "8 Predictive#complete",
+        "7 Predictive#end",
+        "7 Predictive#complete",
+        Shouldn't it be
+        8 end,
+        7 end,
+        7 complete,
+        8 complete
+  
+        and same with 10 and 11?
+   -->
   <script expected>
     [
-      "1 Upgrade#end",
-      "1 Upgrade#complete",
-      "2 Parser#end",
-      "2 Parser#complete",
-      "constructor 3 Predictive#start",
-      "3 Predictive#end",
-      "3 Predictive#complete",
-      "4 Parser#end",
-      "4 Parser#complete",
-      "constructor 5 Predictive#start",
-      "5 Predictive#end",
-      "5 Predictive#complete",
-      "6 Parser#end",
-      "6 Parser#complete",
-      "constructor 7 Predictive#start",
-      "constructor 8 Predictive#start",
-      "8 Predictive#end",
-      "8 Predictive#complete",
-      "7 Predictive#end",
-      "7 Predictive#complete",
-      "9 Parser#end",
-      "9 Parser#complete",
-      "constructor 10 Predictive#start",
-      "constructor 11 Predictive#start",
-      "11 Predictive#end",
-      "11 Predictive#complete",
-      "10 Predictive#end",
-      "10 Predictive#complete",
-      "12 Parser#end",
-      "12 Parser#complete",
-      "constructor 13 Predictive#start",
-      "constructor 14 Predictive#start",
-      "14 Predictive#end",
-      "14 Predictive#complete",
-      "13 Predictive#end",
-      "13 Predictive#complete",
-      "15 Parser#end",
-      "15 Parser#complete",
-      "constructor 16 Predictive#start",
-      "16 Predictive#end",
-      "16 Predictive#complete",
-      "17 Parser#end",
-      "17 Parser#complete",
+      "HEAD 1 Parser#end",
+      "H3 1 Parser#end",
+      "HEAD 1 Parser#complete",
+      "H3 1 Parser#complete",
+      "constructor  2 Predictive#start",
+      "WEB-COMP 2 Predictive#end",
+      "WEB-COMP 2 Predictive#complete",
+      "constructor  3 Predictive#start",
+      "WEB-COMP 3 Predictive#end",
+      "WEB-COMP 3 Predictive#complete",
+      "H3 4 Parser#end",
+      "H3 4 Parser#complete",
+      "constructor  5 Predictive#start",
+      "constructor  6 Predictive#start",
+      "WEB-COMP 6 Predictive#end",
+      "WEB-COMP 6 Predictive#complete",
+      "WEB-COMP 5 Predictive#end",
+      "WEB-COMP 5 Predictive#complete",
+      "H3 7 Parser#end",
+      "H3 7 Parser#complete",
+      "constructor  8 Predictive#start",
+      "constructor  9 Predictive#start",
+      "WEB-COMP 9 Predictive#end",
+      "WEB-COMP 9 Predictive#complete",
+      "WEB-COMP 8 Predictive#end",
+      "WEB-COMP 8 Predictive#complete",
+      "H3 10 Parser#end",
+      "P 10 Parser#end",
+      "H3 10 Parser#complete",
+      "P 10 Parser#complete",
+      "constructor  11 Predictive#start",
+      "constructor  12 Predictive#start",
+      "WEB-COMP 12 Predictive#end",
+      "WEB-COMP 12 Predictive#complete",
+      "WEB-COMP 11 Predictive#end",
+      "WEB-COMP 11 Predictive#complete",
+      "H3 13 Parser#end",
+      "H3 13 Parser#complete",
+      "constructor  14 Predictive#start",
+      "WEB-COMP 14 Predictive#end",
+      "WEB-COMP 14 Predictive#complete",
+      "SCRIPT 15 Parser#end",
+      "SCRIPT 15 Parser#complete",
       "script",
-      "18 Parser#end",
-      "18 Parser#complete",
-      "19 Parser#end",
-      "19 Parser#complete",
-      "constructor 20 Predictive#start",
-      "20 Predictive#end",
-      "20 Predictive#complete",
-      "21 Parser#end",
-      "21 Parser#complete",
-      "interactive"
-    ]
+      "H3 16 Parser#end",
+      "SCRIPT 16 Parser#end",
+      "H3 16 Parser#complete",
+      "SCRIPT 16 Parser#complete",
+      "constructor  17 Predictive#start",
+      "WEB-COMP 17 Predictive#end",
+      "WEB-COMP 17 Predictive#complete",
+      "HTML 18 Parser#end",
+      "BODY 18 Parser#end",
+      "HTML 18 Parser#complete",
+      "BODY 18 Parser#complete",
+      "interactive"]
   </script>
 </test-html>
 <test-html test="test2.html">
   <script expected>
     [
-      "1 Upgrade#end",
-      "1 Upgrade#complete",
-      "2 Upgrade#end",
-      "2 Upgrade#complete",
-      "3 Upgrade#end",
-      "3 Upgrade#complete",
-      "4 Parser#end",
-      "4 Parser#complete",
-      "5 Predictive#start constructor",
-      "5 Predictive#end",
-      "5 Predictive#complete",
-      "6 Parser#end",
-      "6 Parser#complete",
-      "7 Predictive#start constructor start",
-      "8 Predictive#start, InnerHTML#start constructor",
-      "8 Predictive#start, InnerHTML#end",
-      "9 Predictive#start, InsertAdjacentHTML#end",
-      "7 Predictive#start constructor end",
-      "7 Predictive#end",
-      "7 Predictive#complete",
-      "8 Predictive#complete, InnerHTML#complete",
-      "9 Predictive#complete, InsertAdjacentHTML#complete",
-      "10 Parser#end",
-      "10 Parser#complete",
-      "11 Predictive#start constructor start",
-      "12 Predictive#start, DocumentCreateElement#start constructor start",
-      "13 Predictive#start, DocumentCreateElement#start, InnerHTML#start constructor",
-      "13 Predictive#start, DocumentCreateElement#start, InnerHTML#end",
-      "14 Predictive#start, DocumentCreateElement#start, InsertAdjacentHTML#end",
-      "12 Predictive#start, DocumentCreateElement#start constructor end",
-      "12 Predictive#start, DocumentCreateElement#end",
-      "15 Predictive#start, CloneNode#start constructor start",
-      "16 Predictive#start, CloneNode#start, InnerHTML#start constructor",
-      "16 Predictive#start, CloneNode#start, InnerHTML#end",
-      "17 Predictive#start, CloneNode#start, InsertAdjacentHTML#end",
-      "15 Predictive#start, CloneNode#start constructor end",
-      "15 Predictive#start, CloneNode#end",
-      "11 Predictive#start constructor end",
-      "11 Predictive#end",
-      "11 Predictive#complete",
-      "12 Predictive#complete, DocumentCreateElement#complete",
-      "13 Predictive#complete, DocumentCreateElement#complete, InnerHTML#complete",
-      "14 Predictive#complete, DocumentCreateElement#complete, InsertAdjacentHTML#complete",
-      "15 Predictive#complete, CloneNode#complete",
-      "16 Predictive#complete, CloneNode#complete, InnerHTML#complete",
-      "17 Predictive#complete, CloneNode#complete, InsertAdjacentHTML#complete",
-      "18 Parser#end",
-      "18 Parser#complete"
+      "HEAD 1 Parser#end",
+      "H3 1 Parser#end",
+      "HEAD 1 Parser#complete",
+      "H3 1 Parser#complete",
+      " constructor 2 Predictive#start",
+      "INNER-COMP 2 Predictive#end",
+      "INNER-COMP 2 Predictive#complete",
+      " constructor start 3 Predictive#start",
+      " constructor 4 Predictive#start, InnerHTML#start",
+      "INNER-COMP 4 Predictive#start, InnerHTML#end",
+      "H1 5 Predictive#start, InsertAdjacentHTML#end",
+      " constructor end 3 Predictive#start",
+      "MIDDLE-COMP 3 Predictive#end",
+      "MIDDLE-COMP 3 Predictive#complete",
+      "INNER-COMP 4 Predictive#complete, InnerHTML#complete",
+      "H1 5 Predictive#complete, InsertAdjacentHTML#complete",
+      " constructor start 6 Predictive#start",
+      " constructor start 7 Predictive#start, DocumentCreateElement#start",
+      " constructor 8 Predictive#start, DocumentCreateElement#start, InnerHTML#start",
+      "INNER-COMP 8 Predictive#start, DocumentCreateElement#start, InnerHTML#end",
+      "H1 9 Predictive#start, DocumentCreateElement#start, InsertAdjacentHTML#end",
+      " constructor end 7 Predictive#start, DocumentCreateElement#start",
+      "MIDDLE-COMP 7 Predictive#start, DocumentCreateElement#end",
+      " constructor start 10 Predictive#start, CloneNode#start",
+      " constructor 11 Predictive#start, CloneNode#start, InnerHTML#start",
+      "INNER-COMP 11 Predictive#start, CloneNode#start, InnerHTML#end",
+      "H1 12 Predictive#start, CloneNode#start, InsertAdjacentHTML#end",
+      " constructor end 10 Predictive#start, CloneNode#start",
+      "MIDDLE-COMP 10 Predictive#start, CloneNode#end",
+      " constructor end 6 Predictive#start",
+      "OUTER-COMP 6 Predictive#end",
+      "OUTER-COMP 6 Predictive#complete",
+      "MIDDLE-COMP 7 Predictive#complete, DocumentCreateElement#complete",
+      "INNER-COMP 8 Predictive#complete, DocumentCreateElement#complete, InnerHTML#complete",
+      "H1 9 Predictive#complete, DocumentCreateElement#complete, InsertAdjacentHTML#complete",
+      "MIDDLE-COMP 10 Predictive#complete, CloneNode#complete",
+      "INNER-COMP 11 Predictive#complete, CloneNode#complete, InnerHTML#complete",
+      "H1 12 Predictive#complete, CloneNode#complete, InsertAdjacentHTML#complete",
+      "HTML 13 Parser#end",
+      "BODY 13 Parser#end",
+      "HTML 13 Parser#complete",
+      "BODY 13 Parser#complete"
     ]
   </script>
 </test-html>
@@ -132,37 +127,39 @@
     [
       "script",
       [1, "Upgrade#start-constructor"],
-      [1, "Upgrade#end[WEB-COMP]"],
-      [1, "Upgrade#complete"],
+      [1, "Upgrade#endWEB-COMP"],
+      [1, "Upgrade#completeWEB-COMP"],
       [2, "Upgrade#start-constructor"],
-      [2, "Upgrade#end[WEB-COMP]"],
-      [2, "Upgrade#complete"],
+      [2, "Upgrade#endWEB-COMP"],
+      [2, "Upgrade#completeWEB-COMP"],
       [3, "Upgrade#start-constructor"],
-      [3, "Upgrade#end[WEB-COMP]"],
-      [3, "Upgrade#complete"],
+      [3, "Upgrade#endWEB-COMP"],
+      [3, "Upgrade#completeWEB-COMP"],
       [4, "Upgrade#start-constructor"],
-      [4, "Upgrade#end[WEB-COMP]"],
-      [4, "Upgrade#complete"],
+      [4, "Upgrade#endWEB-COMP"],
+      [4, "Upgrade#completeWEB-COMP"],
       [5, "Upgrade#start-constructor"],
-      [5, "Upgrade#end[WEB-COMP]"],
-      [5, "Upgrade#complete"],
+      [5, "Upgrade#endWEB-COMP"],
+      [5, "Upgrade#completeWEB-COMP"],
       [6, "Upgrade#start-constructor"],
-      [6, "Upgrade#end[WEB-COMP]"],
-      [6, "Upgrade#complete"],
+      [6, "Upgrade#endWEB-COMP"],
+      [6, "Upgrade#completeWEB-COMP"],
       [7, "Upgrade#start-constructor"],
-      [7, "Upgrade#end[WEB-COMP]"],
-      [7, "Upgrade#complete"],
+      [7, "Upgrade#endWEB-COMP"],
+      [7, "Upgrade#completeWEB-COMP"],
       [8, "Upgrade#start-constructor"],
-      [8, "Upgrade#end[WEB-COMP]"],
-      [8, "Upgrade#complete"],
+      [8, "Upgrade#endWEB-COMP"],
+      [8, "Upgrade#completeWEB-COMP"],
       [9, "Upgrade#start-constructor"],
-      [9, "Upgrade#end[WEB-COMP]"],
-      [9, "Upgrade#complete"],
+      [9, "Upgrade#endWEB-COMP"],
+      [9, "Upgrade#completeWEB-COMP"],
       [10, "Upgrade#start-constructor"],
-      [10, "Upgrade#end[WEB-COMP]"],
-      [10, "Upgrade#complete"],
-      [11, "Parser#end[HTML,BODY]"],
-      [11, "Parser#complete"],
+      [10, "Upgrade#endWEB-COMP"],
+      [10, "Upgrade#completeWEB-COMP"],
+      [11, "Parser#endHTML"],
+      [11, "Parser#endBODY"],
+      [11, "Parser#completeHTML"],
+      [11, "Parser#completeBODY"],
       "dom interactive"
     ]
   </script>
@@ -170,37 +167,35 @@
 <test-html test="error_predictive_simple.html">
   <script expected>
     [
-      "Upgrade#end",
-      "Upgrade#complete",
-      "Parser#end",
-      "Parser#complete",
       "constructor",
       "error",
-      "Predictive#end",
-      "Predictive#complete",
-      "Parser#end",
-      "Parser#complete"
+      "Parser#end HTML",
+      "Parser#end HEAD",
+      "Parser#end BODY",
+      "Parser#end WEB-COMP",
+      "Parser#complete HTML",
+      "Parser#complete HEAD",
+      "Parser#complete BODY",
+      "Parser#complete WEB-COMP"
     ]
   </script>
 </test-html>
 <test-html test="error_predictive_and_createElement.html">
   <script expected>
     [
-      "Upgrade#end",
-      "Upgrade#complete",
-      "Upgrade#end",
-      "Upgrade#complete",
-      "Parser#end",
-      "Parser#complete",
       "Predictive#start constructor-outer",
       "Predictive#start, DocumentCreateElement#start constructor-inner",
       "error",
-      "Predictive#start, DocumentCreateElement#end",
-      "Predictive#end",
-      "Predictive#complete",
-      "Predictive#complete, DocumentCreateElement#complete",
-      "Parser#end",
-      "Parser#complete"
+      "Predictive#start, DocumentCreateElement#end INNER-COMP",
+      "Predictive#end OUTER-COMP",
+      "Predictive#complete OUTER-COMP",
+      "Predictive#complete, DocumentCreateElement#complete INNER-COMP",
+      "Parser#end HTML",
+      "Parser#end HEAD",
+      "Parser#end BODY",
+      "Parser#complete HTML",
+      "Parser#complete HEAD",
+      "Parser#complete BODY"
     ]
   </script>
 </test-html>
@@ -208,16 +203,18 @@
   <script expected>
     [
       "script",
-      "Upgrade#start-constructor-inner",
+      "Upgrade#start constructor",
       "error",
-      "Upgrade#end",
-      "Upgrade#complete",
-      "Upgrade#start-constructor-inner",
+      "Upgrade#end WEB-COMP",
+      "Upgrade#complete WEB-COMP",
+      "Upgrade#start constructor",
       "error",
-      "Upgrade#end",
-      "Upgrade#complete",
-      "Parser#end",
-      "Parser#complete"
+      "Upgrade#end WEB-COMP",
+      "Upgrade#complete WEB-COMP",
+      "Parser#end HTML",
+      "Parser#end BODY",
+      "Parser#complete HTML",
+      "Parser#complete BODY"
     ]
   </script>
 </test-html>
@@ -228,186 +225,129 @@
       "Upgrade#start-constructor-inner",
       "Upgrade#start-attribute-inner",
       "error",
-      "Upgrade#end",
-      "Upgrade#complete",
-      "Upgrade#end",
-      "Upgrade#complete",
+      "Upgrade#end ATTRIBUTE-COMP",
+      "Upgrade#complete ATTRIBUTE-COMP",
       "Upgrade#start-outer-constructor",
       "Upgrade#start, DocumentCreateElement#start-constructor-inner",
-      "Upgrade#start, DocumentCreateElement#end",
+      "Upgrade#start, DocumentCreateElement#end ONCE-COMP",
       "Upgrade#start, CloneNode#start-constructor-inner",
       "error",
-      "Upgrade#start, CloneNode#end",
+      "Upgrade#start, CloneNode#end ONCE-COMP",
       "Upgrade#start, InnerHTML#start-constructor-inner",
       "Upgrade#start, InnerHTML#start-attribute-inner",
       "error",
-      "Upgrade#start, InnerHTML#end",
+      "Upgrade#start, InnerHTML#end DIV",
+      "Upgrade#start, InnerHTML#end ATTRIBUTE-COMP",
       "Upgrade#start, InsertAdjacentHTML#start-constructor-inner",
       "Upgrade#start, InsertAdjacentHTML#start-attribute-inner",
       "error",
-      "Upgrade#start, InsertAdjacentHTML#end",
+      "Upgrade#start, InsertAdjacentHTML#end ATTRIBUTE-COMP",
       "Upgrade#start-outer-constructor-end",
-      "Upgrade#end",
-      "Upgrade#complete",
-      "Upgrade#complete, DocumentCreateElement#complete",
-      "Upgrade#complete, CloneNode#complete",
-      "Upgrade#complete, InnerHTML#complete",
-      "Upgrade#complete, InsertAdjacentHTML#complete",
-      "Parser#end",
-      "Parser#complete"
+      "Upgrade#end OUTER-COMP",
+      "Upgrade#complete OUTER-COMP",
+      "Upgrade#complete, DocumentCreateElement#complete ONCE-COMP",
+      "Upgrade#complete, CloneNode#complete ONCE-COMP",
+      "Upgrade#complete, InnerHTML#complete DIV",
+      "Upgrade#complete, InnerHTML#complete ATTRIBUTE-COMP",
+      "Upgrade#complete, InsertAdjacentHTML#complete ATTRIBUTE-COMP",
+      "Parser#end HTML",
+      "Parser#end BODY",
+      "Parser#complete HTML",
+      "Parser#complete BODY"
     ]
   </script>
 </test-html>
-
-<!--<test-html test="test_insertAdjacentHTML_context.html">-->
-<!--  <script expected>-->
-<!--    [-->
-<!--      ["HEAD", "#text", "DIV", "#text", "H1", "#text", "#text", "SPAN", "#text", "#text", "#text", "SCRIPT", "#text"],-->
-<!--      ["#comment"],-->
-<!--      ["#text"],-->
-<!--      ["H5", "#text"],-->
-<!--      ["#text"],-->
-<!--      ["H6", "#text"],-->
-<!--      ["HTML", "BODY", "#text"]-->
-<!--    ]-->
-<!--  </script>-->
-<!--</test-html>-->
 
 <test-html test="test_insertAdjacentHTML_context_elements.html">
   <script expected>
     [
-      ["HEAD", "DIV", "H1", "SPAN", "SCRIPT"],
-      [],
-      [],
-      ["H5"],
-      [],
-      ["H6"],
-      ["HTML", "BODY"]
+      "Parser#end HEAD",
+      "Parser#end DIV",
+      "Parser#end H1",
+      "Parser#end SPAN",
+      "Parser#end SCRIPT",
+      "InsertAdjacentHTML#end H5",
+      "InsertAdjacentHTML#end H6",
+      "Parser#end HTML",
+      "Parser#end BODY"
     ]
   </script>
 </test-html>
-
-<!--<test-html test="test_insertAdjacentHTML_emptyContext.html">-->
-<!--  <script expected>-->
-<!--    [-->
-<!--      ["HEAD", "#text", "DIV", "H1", "SPAN", "#text", "SCRIPT", "#text"],-->
-<!--      ["#comment"],-->
-<!--      ["#text"],-->
-<!--      ["H5", "#text"],-->
-<!--      ["#text"],-->
-<!--      ["H6", "#text"],-->
-<!--      ["HTML", "BODY", "#text"]-->
-<!--    ]-->
-<!--  </script>-->
-<!--</test-html>-->
 
 <test-html test="test_insertAdjacentHTML_emptyContext_elements.html">
   <script expected>
     [
-      ["HEAD", "DIV", "H1", "SPAN", "SCRIPT"],
-      [],
-      [],
-      ["H5"],
-      [],
-      ["H6"],
-      ["HTML", "BODY"]
+      "Parser#end HEAD",
+      "Parser#end DIV",
+      "Parser#end H1",
+      "Parser#end SPAN",
+      "Parser#end SCRIPT",
+      "InsertAdjacentHTML#end H5",
+      "InsertAdjacentHTML#end H6",
+      "Parser#end HTML",
+      "Parser#end BODY"
     ]
   </script>
 </test-html>
 
-<!--<test-html test="test_endNodes_noDuplicates.html">-->
-<!--  <script expected>-->
-<!--    [-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      "script",-->
-<!--      "constructor",-->
-<!--      "interactive"-->
-<!--    ]-->
-<!--  </script>-->
-<!--</test-html>-->
-
-<!--<test-html test="test_endNodes_all.html">-->
-<!--  <script expected>-->
-<!--    [-->
-<!--      ["Upgrade#end", []],-->
-<!--      ["Parser#end", ["BODY"]],-->
-<!--      "constructor",-->
-<!--      ["Predictive#end", ["BODY", "#text"]],-->
-<!--      ["Parser#end", ["BODY"]],-->
-<!--      "constructor",-->
-<!--      ["Predictive#end", ["BODY", "#text", "H3", "#text", "#text"]],-->
-<!--      ["Parser#end", ["BODY"]],-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      ["Predictive#end", ["BODY", "WEB-COMP", "#text", "#text", "#text", "H3", "#text", "#text"]],-->
-<!--      ["Predictive#end", ["BODY", "#text", "H3", "#text", "#text"]],-->
-<!--      ["Parser#end", ["BODY"]],-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      ["Predictive#end", ["BODY", "WEB-COMP", "#text", "H3", "#text", "#text", "P", "#text", "#text"]],-->
-<!--      ["Predictive#end", ["BODY", "#text", "H3", "#text", "#text", "P", "#text", "#text"]],-->
-<!--      ["Parser#end", ["BODY"]],-->
-<!--      "constructor",-->
-<!--      "constructor",-->
-<!--      ["Predictive#end", ["BODY", "WEB-COMP", "#text", "H3", "#text", "#text"]],-->
-<!--      ["Predictive#end", ["BODY", "#text", "H3", "#text", "#text"]],-->
-<!--      ["Parser#end", ["BODY"]],-->
-<!--      "constructor",-->
-<!--      ["Predictive#end", ["BODY", "#text", "SCRIPT", "#text"]],-->
-<!--      ["Parser#end", ["BODY"]],-->
-<!--      "script",-->
-<!--      ["Parser#end", ["BODY"]],-->
-<!--      ["Parser#end", ["BODY"]],-->
-<!--      "constructor",-->
-<!--      ["Predictive#end", ["BODY"]],-->
-<!--      ["Parser#end", []],-->
-<!--      "interactive"-->
-<!--    ]-->
-<!--  </script>-->
-<!--</test-html>-->
 <test-html test="test_endElements_all.html">
   <script expected>
     [
-      ["Upgrade#end", []],
-      ["Parser#end", ["BODY"]],
+      "Parser#end HEAD",
+      ["HTML", "BODY", "H3"],
+      "Parser#end H3",
+      ["HTML", "BODY"],
       "constructor",
-      ["Predictive#end", ["BODY"]],
-      ["Parser#end", ["BODY"]],
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY"],
       "constructor",
-      ["Predictive#end", ["BODY", "H3"]],
-      ["Parser#end", ["BODY"]],
-      "constructor",
-      "constructor",
-      ["Predictive#end", ["BODY", "WEB-COMP", "H3"]],
-      ["Predictive#end", ["BODY", "H3"]],
-      ["Parser#end", ["BODY"]],
-      "constructor",
-      "constructor",
-      ["Predictive#end", ["BODY", "WEB-COMP", "H3", "P"]],
-      ["Predictive#end", ["BODY", "H3", "P"]],
-      ["Parser#end", ["BODY"]],
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY", "H3"],
+      "Parser#end H3",
+      ["HTML", "BODY"],
       "constructor",
       "constructor",
-      ["Predictive#end", ["BODY", "WEB-COMP", "H3"]],
-      ["Predictive#end", ["BODY", "H3"]],
-      ["Parser#end", ["BODY"]],
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY", "WEB-COMP", "H3"],
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY", "H3"],
+      "Parser#end H3",
+      ["HTML", "BODY"],
       "constructor",
-      ["Predictive#end", ["BODY", "SCRIPT"]],
-      ["Parser#end", ["BODY"]],
+      "constructor",
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY", "WEB-COMP", "H3", "P"],
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY", "H3", "P"],
+      "Parser#end H3",
+      ["HTML", "BODY", "P"],
+      "Parser#end P",
+      ["HTML", "BODY"],
+      "constructor",
+      "constructor",
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY", "WEB-COMP", "H3"],
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY", "H3"],
+      "Parser#end H3",
+      ["HTML", "BODY"],
+      "constructor",
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY", "SCRIPT"],
+      "Parser#end SCRIPT",
+      ["HTML", "BODY"],
       "script",
-      ["Parser#end", ["BODY"]],
-      ["Parser#end", ["BODY"]],
+      "Parser#end H3",
+      ["HTML", "BODY", "SCRIPT"],
+      "Parser#end SCRIPT",
+      ["HTML", "BODY"],
       "constructor",
-      ["Predictive#end", ["BODY"]],
-      ["Parser#end", []],
+      "Predictive#end WEB-COMP",
+      ["HTML", "BODY"],
+      "Parser#end HTML",
+      ["BODY"],
+      "Parser#end BODY",
+      [],
       "interactive"
     ]
   </script>
