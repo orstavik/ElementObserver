@@ -19,13 +19,10 @@
 
     #callObservers(state) {
       const observers = ConstructionFrame.#observers[this.#state = state];
-      // if (!observers.length)
-      //   return;
-      // if(this.#state === 'start')
-      observers.forEach(cb => cb(this));
-      // else
-      //   for (let el of this.elements())
-      //     observers.forEach(cb => cb(el));
+      for (let cb of observers)
+        // cb(this);
+        for (let el of this.elements())
+          cb(this, el);
     }
 
     #complete() {
@@ -287,6 +284,7 @@
     }
 
     end(skips) {
+      if(!this.#el.isConnected) return;   //if the constructor fails, then the PredictiveConstructionFrame should also fail as such.
       this.#skips = skips;
       super.end();
     }
@@ -354,6 +352,8 @@
       super();
       if (!ConstructionFrame.now) {
         frames.unshift(new PredictiveConstructionFrame(this));
+        //if we are working on individual elements, and don't really care about Predictive or not, can we then simply skip this?
+        // No. We need the ConstructionFrame I think..
         roots.push(this);
       }
     }

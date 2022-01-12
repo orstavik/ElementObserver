@@ -5,11 +5,12 @@
   (function () {
     let count = 0;
 
-    function printFrame(frame, msg = '') {
-      console.log(`${msg}${frame.__id ??= ++count} ${frame}`);
+    function printFrame(frame, elOrMsg) {
+      elOrMsg = elOrMsg.tagName ? elOrMsg.tagName : elOrMsg;
+      console.log(`${elOrMsg} ${(frame.__id ??= ++count)} ${(frame instanceof ConstructionFrame ? frame.toString() : frame.tagName)}`);
     }
 
-    ConstructionFrame.observe('start', printFrame);
+    // ConstructionFrame.observe('start', printFrame);
     ConstructionFrame.observe('end', printFrame);
     ConstructionFrame.observe('complete', printFrame);
 

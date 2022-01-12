@@ -31,12 +31,12 @@
   (function () {
     let count = 0;
 
-    function printFrame(frame, type = '') {
-      frame.state === 'end' && (type = ('[' + Array.from(frame.elements()).map(n => n.nodeName).join(',') + ']'));
-      console.log(frame.__id ??= ++count, frame + type);
+    function printFrame(frame, elOrMsg) {
+      elOrMsg = elOrMsg.tagName ? elOrMsg.tagName : elOrMsg;
+      console.log(frame.__id ??= ++count, frame + elOrMsg);
     }
 
-    ConstructionFrame.observe('start', printFrame);
+    // ConstructionFrame.observe('start', printFrame);
     ConstructionFrame.observe('end', printFrame);
     ConstructionFrame.observe('complete', printFrame);
 

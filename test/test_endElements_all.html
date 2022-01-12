@@ -8,11 +8,12 @@
       yield* allElements(c);
   }
 
-  const endedElements = [...allElements()];
+  const endedElements = [...allElements()].filter(n =>  !( document.currentScript.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_CONTAINS));
 
-  function printFrame(frame) {
-    endedElements.push(...frame.elements());
-    console.log(frame + "", [...allElements()].filter(n => endedElements.indexOf(n) === -1).map(n => n.nodeName));
+  function printFrame(frame, el) {
+    endedElements.push(el);
+    console.log(frame + " "  + el.tagName);
+    console.log([...allElements()].filter(n => endedElements.indexOf(n) === -1).map(n => n.tagName));
   }
 
   ConstructionFrame.observe('end', printFrame);
