@@ -15,14 +15,22 @@
       constructor() {
         super();
         console.log(ConstructionFrame.now + ' two');
+        this.innerHTML = '<comp-one></comp-one>';
+        console.log("constructor end comp two");
       }
     }
+
 
     class CompOne extends HTMLElement {
       constructor() {
         super();
         console.log(ConstructionFrame.now + ' one');
-        customElements.define("comp-two", CompTwo);
+        try{
+          customElements.define("comp-two", CompTwo);
+        } catch(err){
+          console.log("expected second time round");
+        }
+        console.log("constructor end comp one");
       }
     }
 
