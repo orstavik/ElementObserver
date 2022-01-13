@@ -30,28 +30,28 @@
       "H3 4 Parser#complete",
       "constructor  5 Predictive#start",
       "constructor  6 Predictive#start",
-      "WEB-COMP 6 Predictive#end",
-      "WEB-COMP 6 Predictive#complete",
       "WEB-COMP 5 Predictive#end",
       "WEB-COMP 5 Predictive#complete",
+      "WEB-COMP 6 Predictive#end",
+      "WEB-COMP 6 Predictive#complete",
       "H3 7 Parser#end",
       "H3 7 Parser#complete",
       "constructor  8 Predictive#start",
       "constructor  9 Predictive#start",
-      "WEB-COMP 9 Predictive#end",
-      "WEB-COMP 9 Predictive#complete",
       "WEB-COMP 8 Predictive#end",
       "WEB-COMP 8 Predictive#complete",
+      "WEB-COMP 9 Predictive#end",
+      "WEB-COMP 9 Predictive#complete",
       "H3 10 Parser#end",
       "P 10 Parser#end",
       "H3 10 Parser#complete",
       "P 10 Parser#complete",
       "constructor  11 Predictive#start",
       "constructor  12 Predictive#start",
-      "WEB-COMP 12 Predictive#end",
-      "WEB-COMP 12 Predictive#complete",
       "WEB-COMP 11 Predictive#end",
       "WEB-COMP 11 Predictive#complete",
+      "WEB-COMP 12 Predictive#end",
+      "WEB-COMP 12 Predictive#complete",
       "H3 13 Parser#end",
       "H3 13 Parser#complete",
       "constructor  14 Predictive#start",
@@ -161,6 +161,22 @@
       [11, "Parser#completeHTML"],
       [11, "Parser#completeBODY"],
       "dom interactive"
+    ]
+  </script>
+</test-html>
+<test-html test="nested_define.html">
+  <script expected>
+    [
+      "Upgrade#start one",
+      "Upgrade#start, Upgrade#start two",
+      "Upgrade#start, Upgrade#end COMP-TWO",
+      "Upgrade#end COMP-ONE",
+      "Upgrade#complete COMP-ONE",
+      "Upgrade#complete, Upgrade#complete COMP-TWO",
+      "Parser#end HTML",
+      "Parser#end BODY",
+      "Parser#complete HTML",
+      "Parser#complete BODY"
     ]
   </script>
 </test-html>
