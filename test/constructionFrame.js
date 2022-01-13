@@ -1,12 +1,12 @@
 (function initConstructionFrameAPI() {
   let now;
 
-  class ConstructionFrame {
+  window.ConstructionFrame = class ConstructionFrame {
 
     #children = [];
     #parent;
     #state = "start";
-    #elements;
+    #elements = [];
     #name;
 
     static #observers = {'end': [], 'complete': []};
@@ -18,15 +18,15 @@
       this.#parent?.#children.push(this);
     }
 
-    #callObservers(state) {
+    #callObservers(state, elements) {
       const observers = ConstructionFrame.#observers[this.#state = state];
-      for (let el of this.elements())
+      for (let el of elements)
         for (let cb of observers)
           cb(this, el);
     }
 
     #complete() {
-      this.#callObservers('complete');
+      this.#callObservers('complete', this.elements());
       this.#children.forEach(frame => frame.#complete());
     }
 
@@ -64,15 +64,20 @@
       pos >= 0 && this.#observers[state].splice(pos, 1);
     }
 
+    callEnd(element) {
+      this.#state = 'end';
+      this.#elements.push(element);
+      for (let cb of ConstructionFrame.#observers['end'])
+        cb(this, element);
+    }
+
     end(elements) {
-      this.#elements = elements;
-      this.#callObservers('end');
+      for (let e of elements)
+        this.callEnd(e);
       !this.#parent && this.#complete();
       now = this.#parent;
     }
   }
-
-  window.ConstructionFrame = ConstructionFrame;
 
   function innerHTML_constructionFrame(og, val) {
     const frame = new ConstructionFrame("InnerHTML");
@@ -126,13 +131,11 @@
  */
 (function () {
   class UpgradeConstructionFrame extends ConstructionFrame {
-    #tagName;
     #el;
 
-    constructor(tagName, el) {
+    constructor(el) {
       super();
       this.#el = el;
-      this.#tagName = tagName;
     }
 
     end() {
@@ -142,12 +145,12 @@
     chain(el) {
       if (!this.#el) return this.#el = el; //if this is the first upgraded element, then just update the element in the frame
       this.end();                                       //otherwise, end the previous element frame,
-      new UpgradeConstructionFrame(this.#tagName, el);   //and start a new frame
+      new UpgradeConstructionFrame(el);   //and start a new frame
     }
   }
 
   MonkeyPatch.monkeyPatch(CustomElementRegistry.prototype, "define", function createElement_constructionFrame(og, ...args) {
-    new UpgradeConstructionFrame(args[0]);
+    new UpgradeConstructionFrame();
     og.call(this, ...args);
     ConstructionFrame.now.end();
   });
@@ -170,7 +173,7 @@
   const frames = new WeakMap();
 
   function onParserBreak(e) {
-    ConstructionFrame.dropNow();
+    ConstructionFrame.dropNow(); //if there is a predictive frame, then let it loose.
     const parser = [];
     let endedNodes = [...e.endedNodes()];
     for (let ended of endedNodes) {
