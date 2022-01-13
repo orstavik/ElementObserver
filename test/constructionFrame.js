@@ -167,41 +167,22 @@
   if (document.readyState !== 'loading')
     return;
 
-  class PredictiveConstructionFrame extends ConstructionFrame {
-
-    #el;
-
-    constructor(el) {
-      super();
-      this.#el = el;
-    }
-
-    get el() {
-      return this.#el;
-    }
-  }
-
-  const roots = [];
-  const frames = [];
-
-  function endTagRead(el, lastParsed) {
-    return el !== lastParsed && el.compareDocumentPosition(lastParsed) !== 20;
-  }
+  const frames = new WeakMap();
 
   function onParserBreak(e) {
-    while (frames[0] && endTagRead(frames[0].el, e.target)) {
-      const frame = frames.shift();
-      if (!frame.el.isConnected)            //if the constructor fails, then the PredictiveConstructionFrame should also fail as such.
-        continue;
-      const elements = [...frame.el.querySelectorAll('*')].filter(el => roots.indexOf(el) < 0);
-      elements.unshift(frame.el);
-      frame.end(elements);
-    }
     ConstructionFrame.dropNow();
-    const addedElements = [...e.endedNodes()].filter(n => n instanceof Element && roots.findIndex(s => s === n || s.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_CONTAINED_BY) === -1);
-    addedElements.length && new ConstructionFrame("Parser").end(addedElements);
-    // todo here we can remove the elements that has been ended from the roots list. Not sure if this would be faster though.
-    // roots.splice(roots.indexOf(frame.el), 1); //todo this doesn't work. the roots are popping up later.
+    const parser = [];
+    let endedNodes = [...e.endedNodes()];
+    for (let ended of endedNodes) {
+      if (ended instanceof Element) {
+        const predictiveFrame = frames.get(ended);
+        if (predictiveFrame)
+          predictiveFrame.end([ended]);
+        else
+          parser.push(ended);
+      }
+    }
+    parser.length && new ConstructionFrame("Parser").end(parser);
   }
 
   window.addEventListener('parser-break', onParserBreak, true);
@@ -209,10 +190,7 @@
   class PredictiveConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
       super();
-      if (!ConstructionFrame.now) {
-        frames.unshift(new PredictiveConstructionFrame(this));
-        roots.push(this);
-      }
+      !ConstructionFrame.now && frames.set(this, new ConstructionFrame("Predictive"));
     }
   }
 
