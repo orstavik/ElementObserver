@@ -241,6 +241,26 @@
     ]
   </script>
 </test-html>
+<test-html test="error_upgrade_2_of_3.html">
+  <script expected>
+    [
+      "Upgrade#start constructor",
+      "Upgrade#end WEB-COMP",
+      "Upgrade#complete WEB-COMP",
+      "Upgrade#start constructor",
+      "error",
+      "Upgrade#end WEB-COMP",
+      "Upgrade#complete WEB-COMP",
+      "Upgrade#start constructor",
+      "Upgrade#end WEB-COMP",
+      "Upgrade#complete WEB-COMP",
+      "Parser#end HTML",
+      "Parser#end BODY",
+      "Parser#complete HTML",
+      "Parser#complete BODY"
+    ]
+  </script>
+</test-html>
 <test-html test="error_upgrade_inner_adjacent_clone.html">
   <script expected>
     [
