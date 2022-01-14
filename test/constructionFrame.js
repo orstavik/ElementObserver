@@ -13,7 +13,7 @@
 
     constructor(name) {
       this.#parent = now;
-      this.#name = name || this.constructor.name.slice(0, -17);
+      this.#name = name;
       now = this;
       this.#parent?.#children.push(this);
     }
@@ -102,28 +102,12 @@
     return created;
   });
 
-  //todo simplify this one
-  function* elementsImplx(d) {
-    if (d.position === 'beforebegin') {
-      for (let n = d.previousSibling?.nextSibling || d.element.parentNode?.firstChild; n && n !== d.element; n = n.nextSibling)
-        if (n instanceof Element) yield* [n, ...n.querySelectorAll('*')];
-    } else if (d.position === 'afterend') {
-      for (let n = d.element.nextSibling; n && n !== d.nextSibling; n = n.nextSibling)
-        if (n instanceof Element) yield* [n, ...n.querySelectorAll('*')];
-    } else if (d.position === 'afterbegin') {
-      for (let n = d.element.firstChild; n && n !== d.firstChild; n = n.nextSibling)
-        if (n instanceof Element) yield* [n, ...n.querySelectorAll('*')];
-    } else if (d.position === 'beforeend') {
-      for (let n = d.lastChild?.nextSibling || d.element.firstChild; n; n = n.nextSibling)
-        if (n instanceof Element) yield* [n, ...n.querySelectorAll('*')];
-    }
-  }
-
   MonkeyPatch.monkeyPatch(Element.prototype, "insertAdjacentHTML", function insertAdjacentHTML_constructHtmlElement(og, position, ...args) {
-    const {previousSibling, lastChild, firstChild, nextSibling} = this;
     const frame = new ConstructionFrame("InsertAdjacentHTML");
+    const root = position === 'beforebegin' || position === 'afterend' ? this.parentNode : this;
+    const before = root && [...root.children];//checking for root in order to get good error messages for missing parent on beforebegin and afterend.
     og.call(this, position, ...args);
-    frame.end([...elementsImplx({position, element: this, previousSibling, lastChild, firstChild, nextSibling})]);
+    frame.end([...root.children].filter(el => before.indexOf(el) === -1));
   });
 })();
 /*
