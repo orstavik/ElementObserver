@@ -130,43 +130,36 @@
  * UPGRADE, depends on ConstructionFrame
  */
 (function () {
-  class UpgradeConstructionFrame extends ConstructionFrame {
-    #el;
 
-    constructor(el) {
-      super();
-      this.#el = el;
-    }
-
-    end() {
-      super.end(this.#el ? [this.#el] : []);
-    }
-
-    chain(el) {
-      if (!this.#el) return this.#el = el; //if this is the first upgraded element, then just update the element in the frame
-      this.end();                                       //otherwise, end the previous element frame,
-      new UpgradeConstructionFrame(el);   //and start a new frame
-    }
-  }
-
+  const frameToEl = new WeakMap();
+  let upgradeStart;
   MonkeyPatch.monkeyPatch(CustomElementRegistry.prototype, "define", function createElement_constructionFrame(og, ...args) {
-    new UpgradeConstructionFrame();
-    og.call(this, ...args);
-    ConstructionFrame.now.end();
+    try {
+      upgradeStart = true;
+      og.call(this, ...args);
+    } catch (err) {
+      upgradeStart = undefined;
+      throw err;
+    }
+    if (upgradeStart)                      //no upgrade
+      upgradeStart = undefined;
+    else                                   //end last upgrade
+      ConstructionFrame.now.end([frameToEl.get(ConstructionFrame.now)]);
   });
 
   window.HTMLElement = class UpgradeConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
       super();
-      ConstructionFrame.now instanceof UpgradeConstructionFrame && ConstructionFrame.now.chain(this);
+      if (upgradeStart)
+        frameToEl.set(new ConstructionFrame("Upgrade"), this), upgradeStart = undefined;
+      else if (!upgradeStart && frameToEl.has(ConstructionFrame.now))
+        ConstructionFrame.now.end([frameToEl.get(ConstructionFrame.now)]), frameToEl.set(new ConstructionFrame("Upgrade"), this);
     }
   }
-})();
-/*
- * PREDICTIVE PARSER, depends on UPGRADE
- */
-(function () {
 
+  /*
+   * PREDICTIVE PARSER, depends on UPGRADE
+   */
   if (document.readyState !== 'loading')
     return;
 
@@ -193,7 +186,7 @@
   class PredictiveConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
       super();
-      !ConstructionFrame.now && frames.set(this, new ConstructionFrame("Predictive"));
+      !upgradeStart && !ConstructionFrame.now && frames.set(this, new ConstructionFrame("Predictive"));
     }
   }
 
