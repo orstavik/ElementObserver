@@ -41,16 +41,10 @@
       this.#parent?.#children.push(this);
     }
 
-    #callComplete(elements) {
-      for (let el of elements)
-        for (let cb of completeObservers)
-          cb(this, el);
-    }
-
-    #complete() {
-      this.#state = 'complete';
-      this.#callComplete(this.#elements);
-      this.#children.forEach(frame => frame.#complete());
+    *descendants (){                 //todo the cb should not have anything but the element.
+      yield this;                    // then the frame is only a string
+      for (let c of this.#children)  // the state of the frame, is that necessary? Or is it only necessary to know the now? yes, only now..
+        yield* c.descendants();
     }
 
     toString() {
@@ -66,8 +60,15 @@
     }
 
     end() {
-      !this.#parent && this.#complete();
       now = this.#parent;
+      if(this.#parent)
+        return;
+      for (let c of this.descendants()) {
+        c.#state = 'complete';
+        for (let el of c.#elements)
+          for (let cb of completeObservers)
+            cb(c, el);
+      }
     }
   }
 
@@ -151,17 +152,17 @@
   function onParserBreak(e) {
     now = undefined; //if there is a predictive frame, then let it loose.
     let parserFrame;
-    let endedNodes = [...e.endedNodes()];                    //todo run this in reverse?
-    for (let ended of endedNodes) {
+    //it is a problem to run this in "first end tag read", because this is not simply a reverse call..
+    for (let ended of e.endedNodes()) {
       if (ended instanceof Element) {
         const predictiveFrame = frames.get(ended);
         if (predictiveFrame)
           predictiveFrame.callEnd(ended), predictiveFrame.end();
         else
-          (parserFrame ??= new ConstructionFrame("Parser")).callEnd(ended);
+          (parserFrame = new ConstructionFrame("Parser")), parserFrame.callEnd(ended), parserFrame.end();
       }
     }
-    parserFrame?.end();
+    // parserFrame?.end();
   }
 
   window.addEventListener('parser-break', onParserBreak, true);
