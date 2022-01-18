@@ -49,21 +49,20 @@
 
     callEnd(element) {
       this.#state = 'end';
-      this.#elements.push(element);
+      this.#elements.push(element);                 //todo we only need the top construction frame? yeah, for now. Better have the populated graph.
       for (let cb of endObservers)
         cb(element);
     }
 
     end() {
       now = this.#parent;
-      if (this.#parent)
-        return;
-      for (let c of this.descendants()) {
-        c.#state = 'complete';
-        for (let el of c.#elements)
-          for (let cb of completeObservers)
-            cb(c, el);
-      }
+      if (!now)
+       for (let c of this.descendants()) {
+         c.#state = 'complete';
+         for (let el of c.#elements)
+           for (let cb of completeObservers)
+             cb(c, el);
+       }
     }
   }
 
@@ -91,7 +90,7 @@
 
   MonkeyPatch.monkeyPatch(Document.prototype, "createElement", function createElement_constructionFrame(og, ...args) {
     const frame = new ConstructionFrame("DocumentCreateElement");
-    const created = og.call(this, ...args);
+    const created = og.call(this, ...args);  //todo we need a try catch around the frame so that it ends. This applies to most of the functions?
     frame.callEnd(created)
     frame.end();
     return created;
@@ -100,7 +99,7 @@
   MonkeyPatch.monkeyPatch(Element.prototype, "insertAdjacentHTML", function insertAdjacentHTML_constructHtmlElement(og, position, ...args) {
     const frame = new ConstructionFrame("InsertAdjacentHTML");
     const root = position === 'beforebegin' || position === 'afterend' ? this.parentNode : this;
-    const before = root && [...root.querySelectorAll('*')];//checking for root in order to get good error messages for missing parent on beforebegin and afterend.
+    const before = root && [...root.querySelectorAll('*')];//if root is parent, and there is no parent, the og.call will throw an error
     og.call(this, position, ...args);
     for (let el of root.querySelectorAll('*'))   //todo run this in reverse
       if (!before || before.indexOf(el) === -1)
