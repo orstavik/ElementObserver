@@ -3,39 +3,34 @@
 <script src="constructionFrame.js"></script>
 <script>
   (function () {
-    function printFrame(frame, elOrMsg) {
-      elOrMsg = elOrMsg.tagName ? elOrMsg.tagName : elOrMsg;
-      console.log(`${elOrMsg} ${frame}`);
-    }
-
-    ElementObserver.end(el => printFrame(ElementObserver.now, el));
-    ElementObserver.complete(printFrame);
+    ElementObserver.end(el => console.log("end   " + el.tagName + ' ' + ElementObserver.now));
+    ElementObserver.complete(el => console.log("fin   " + el.tagName));
 
     customElements.define('inner-comp', class InnerComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ElementObserver.now, ` constructor`);
+        console.log('con ' + this.tagName + " " + ElementObserver.now);
       }
     });
     customElements.define('middle-comp', class MiddleComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ElementObserver.now, ` constructor start`);
+        console.log('open  ' + this.tagName + " " + ElementObserver.now);
         this.attachShadow({mode: "open"});
         this.shadowRoot.innerHTML = '<inner-comp></inner-comp>';
         this.shadowRoot.children[0].insertAdjacentHTML('afterend', '<h1></h1>');
-        printFrame(ElementObserver.now, ` constructor end`);
+        console.log('close ' + this.tagName + " " + ElementObserver.now);
       }
     });
     customElements.define('outer-comp', class OuterComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ElementObserver.now, ` constructor start`);
+        console.log('open  ' + this.tagName + " " + ElementObserver.now);
         const a = document.createElement('middle-comp');
         const b = a.cloneNode();
         this.attachShadow({mode: "open"});
         this.shadowRoot.append(b);
-        printFrame(ElementObserver.now, ` constructor end`);
+        console.log('close ' + this.tagName + " " + ElementObserver.now);
       }
     });
   })();

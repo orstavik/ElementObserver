@@ -8,15 +8,15 @@
 <script>
   (function () {
 
-    ElementObserver.end(el => console.log(ElementObserver.now + " " + el.tagName));
-    ElementObserver.complete( (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.end(el => console.log("end   " + el.tagName + " " + ElementObserver.now));
+    ElementObserver.complete( el => console.log("fin   " + el.tagName));
 
     class CompTwo extends HTMLElement {
       constructor() {
         super();
-        console.log(ElementObserver.now + ' two');
+        console.log('open  ' + this.tagName + " " + ElementObserver.now);
         this.innerHTML = '<comp-one></comp-one>';
-        console.log("constructor end comp two");
+        console.log('close ' + this.tagName + " " + ElementObserver.now);
       }
     }
 
@@ -24,13 +24,13 @@
     class CompOne extends HTMLElement {
       constructor() {
         super();
-        console.log(ElementObserver.now + ' one');
+        console.log('open  ' + this.tagName + " " + ElementObserver.now);
         try{
           customElements.define("comp-two", CompTwo);
         } catch(err){
-          console.log("expected second time round");
+          console.log("expected in the first nested sequence");
         }
-        console.log("constructor end comp one");
+        console.log('close ' + this.tagName + " " + ElementObserver.now);
       }
     }
 

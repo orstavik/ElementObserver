@@ -7,13 +7,13 @@
     window.addEventListener('error', e => e.preventDefault());
     window.addEventListener('error', _ => console.log('error'));
 
-    ElementObserver.end(el => console.log(ElementObserver.now + " " + el.tagName));
-    ElementObserver.complete( (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.end(el => console.log("end " + el.tagName + ' ' + ElementObserver.now));
+    ElementObserver.complete(el => console.log("fin " + el.tagName));
 
     class InnerComp extends HTMLElement {
       constructor() {
         super();
-        console.log(`${ElementObserver.now} constructor-inner`);
+        console.log('con ' + this.tagName + " " + ElementObserver.now);
         throw new Error('test error');
       }
     }
@@ -23,7 +23,7 @@
     class OuterComp extends HTMLElement {
       constructor() {
         super();
-        console.log(`${ElementObserver.now} constructor-outer`);
+        console.log('con ' + this.tagName + " " + ElementObserver.now);
         this.attachShadow({mode: "open"});
         document.createElement('inner-comp');
       }

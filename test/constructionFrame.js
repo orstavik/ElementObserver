@@ -21,7 +21,6 @@
 
     #children = [];
     #parent;
-    #state = "start";
     #elements = [];
     #name;
 
@@ -43,25 +42,22 @@
     }
 
     toString() {
-      const parent = this.#parent ? this.#parent.toString() + ', ' : '';
-      return parent + this.#name + '#' + this.#state;
+      return (this.#parent ? this.#parent.toString() + ', ' : '') + this.#name;
     }
 
-    callEnd(element) {
-      this.#state = 'end';
-      this.#elements.push(element);                 //todo we only need the top construction frame? yeah, for now. Better have the populated graph.
+    callEnd(el) {
+      this.#elements.push(el);                 //todo we only need the top construction frame? yeah, for now. Better have the populated graph.
       for (let cb of endObservers)
-        cb(element);
+        cb(el);
     }
 
     end() {
       now = this.#parent;
       if (!now)
        for (let c of this.descendants()) {
-         c.#state = 'complete';
          for (let el of c.#elements)
            for (let cb of completeObservers)
-             cb(c, el);
+             cb(el);
        }
     }
   }
@@ -140,6 +136,7 @@
 
   function onParserBreak(e) {
     now = undefined;                      //when now is a predictive frame, then let it loose.
+    //todo here we can make a test that ensures that the endCallback is made if the constructor throws an Error.
     for (let el of e.endedElements()) {   //it is a problem to run this in "first end tag read", because this is not simply a reverse call..
       now = frames.get(el) || new ConstructionFrame("Parser");
       now.callEnd(el);

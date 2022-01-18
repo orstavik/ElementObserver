@@ -32,18 +32,13 @@
 <script src="constructionFrame.js"></script>
 <script>
   (function () {
-    function printFrame(frame, elOrMsg) {
-      elOrMsg = elOrMsg.tagName ? elOrMsg.tagName : elOrMsg;
-      console.log(frame + elOrMsg);
-    }
-
-    ElementObserver.end(el => printFrame(ElementObserver.now, el));
-    ElementObserver.complete(printFrame);
+    ElementObserver.end(el => console.log("end " + el.tagName + ' ' + ElementObserver.now));
+    ElementObserver.complete(el => console.log("fin " + el.tagName));
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ElementObserver.now, '-constructor');
+        console.log('con ' + this.tagName + " " + ElementObserver.now);
       }
     });
   })();

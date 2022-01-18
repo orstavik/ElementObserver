@@ -8,20 +8,20 @@
       yield* allElements(c);
   }
 
-  const endedElements = [...allElements()].filter(n =>  !( document.currentScript.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_CONTAINS));
+  const endedElements = [...allElements()].filter(n => !(document.currentScript.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_CONTAINS));
 
-  function printFrame(el, frame = ElementObserver.now) {
+  function printFrame(el) {
     endedElements.push(el);
-    console.log(frame + " "  + el.tagName);
+    console.log("end " + el.tagName + " " + ElementObserver.now);
     console.log([...allElements()].filter(n => endedElements.indexOf(n) === -1).map(n => n.tagName));
   }
 
-  ElementObserver.end( printFrame);
+  ElementObserver.end(printFrame);
 
   customElements.define('web-comp', class WebComp extends HTMLElement {
     constructor() {
       super();
-      console.log("constructor");
+      console.log('con ' + this.tagName + " " + ElementObserver.now);
     }
   });
 </script>

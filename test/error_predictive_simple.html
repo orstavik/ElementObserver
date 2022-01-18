@@ -7,14 +7,13 @@
     window.addEventListener('error', e => e.preventDefault());
     window.addEventListener('error', _ => console.log('error'));
 
-    // ConstructionFrame.observe('start', f => console.log(f.toString()));
-    ElementObserver.end(el => console.log(ElementObserver.now + " " + el.tagName));
-    ElementObserver.complete( (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.end(el => console.log("end " + el.tagName + ' ' + ElementObserver.now));
+    ElementObserver.complete(el => console.log("fin " + el.tagName));
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {
         super();
-        console.log("constructor");
+        console.log('con ' + this.tagName + " " + ElementObserver.now);
         throw new Error();
       }
     });

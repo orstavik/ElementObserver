@@ -13,22 +13,17 @@
 
     let once = 1;
 
-    // ConstructionFrame.observe('start', printFrame);
-    // ElementObserver.end( printFrame);
-    // ElementObserver.complete( printFrame);
-    //
-    // ConstructionFrame.observe('start', f => console.log(f.toString()));
-    ElementObserver.end(el => console.log(ElementObserver.now + " " + el.tagName));
-    ElementObserver.complete( (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.end(el => console.log("end   " + el.tagName + ' ' + ElementObserver.now));
+    ElementObserver.complete(el => console.log("fin   " + el.tagName));
 
     class AttributeComp extends HTMLElement {
       constructor() {
         super();
-        console.log(ElementObserver.now + '-constructor-inner');
+        console.log('con   ' + this.tagName + " " + ElementObserver.now);
       }
 
       attributeChangedCallback() {
-        console.log(ElementObserver.now + '-attribute-inner');
+        console.log('accb  ' + this.tagName + " " + ElementObserver.now);
         throw new Error('test error');
       }
 
@@ -42,7 +37,7 @@
     class OnceComp extends HTMLElement {
       constructor() {
         super();
-        console.log(ElementObserver.now + '-constructor-inner');
+        console.log('con   ' + this.tagName + " " + ElementObserver.now);
         if (!once--) throw new Error('test error');
       }
     }
@@ -52,13 +47,13 @@
     class OuterComp extends HTMLElement {
       constructor() {
         super();
-        console.log(ElementObserver.now + '-outer-constructor');
+        console.log('con   ' + this.tagName + " " + ElementObserver.now);
         this.attachShadow({mode: "open"});
         const once = document.createElement('once-comp');
         const clone = once.cloneNode(); //throws
         this.shadowRoot.innerHTML = '<div></div><attribute-comp a></attribute-comp>';  //throws
         this.shadowRoot.children[0].insertAdjacentHTML('afterbegin', '<attribute-comp a></attribute-comp>'); //throws
-        console.log(ElementObserver.now + '-outer-constructor-end');
+        console.log('close ' + this.tagName + " " + ElementObserver.now);
       }
     }
 
