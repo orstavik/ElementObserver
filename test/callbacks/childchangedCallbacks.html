@@ -86,7 +86,7 @@
     }
 
     const MO = new MutationObserver(checkChildChangedFromMO);
-    ConstructionFrame.observe('complete', (frame, el) => el.childChangedCallback && setupChildChanged(el));
+    ElementObserver.complete( (frame, el) => el.childChangedCallback && setupChildChanged(el));
   })(addEventListener, removeEventListener);
 
 </script>

@@ -3,7 +3,7 @@
 <script src="constructionFrame.js"></script>
 
 <script>
-  ConstructionFrame.observe('end', (frame, el) => console.log(frame + " " + el.tagName));
+  ElementObserver.end( (frame, el) => console.log(frame + " " + el.tagName));
 </script>
 
 <div><h1></h1><span></span></div>

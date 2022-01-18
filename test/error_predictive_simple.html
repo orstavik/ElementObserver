@@ -8,8 +8,8 @@
     window.addEventListener('error', _ => console.log('error'));
 
     // ConstructionFrame.observe('start', f => console.log(f.toString()));
-    ConstructionFrame.observe('end', (f, el) => console.log(f.toString() + " " + el.tagName));
-    ConstructionFrame.observe('complete', (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.end( (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.complete( (f, el) => console.log(f.toString() + " " + el.tagName));
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {

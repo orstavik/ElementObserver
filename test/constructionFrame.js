@@ -3,7 +3,21 @@
   const endObservers = [];
   const completeObservers = [];
 
-  window.ConstructionFrame = class ConstructionFrame {
+  window.ElementObserver = class ElementObserver {
+    static end(cb) {
+      endObservers.push(cb);
+    }
+
+    static complete(cb) {
+      completeObservers.push(cb);
+    }
+
+    static get now() {
+      return now;
+    }
+  }
+
+  class ConstructionFrame {
 
     #children = [];
     #parent;
@@ -19,8 +33,6 @@
     //todo extract the observers as an external entity.
 
     //todo childchangedCallback and the rec object. we also need to add those that are not flatdom slotted, but only directly slotted.
-
-    // static #observers = {'end': [], 'complete': []};
 
     constructor(name) {
       this.#name = name;
@@ -44,14 +56,6 @@
     toString() {
       const parent = this.#parent ? this.#parent.toString() + ', ' : '';
       return parent + this.#name + '#' + this.#state;
-    }
-
-    static get now() {
-      return now;
-    }
-
-    static observe(state, cb) {
-      (state === 'end' ? endObservers : completeObservers).push(cb);
     }
 
     callEnd(element) {

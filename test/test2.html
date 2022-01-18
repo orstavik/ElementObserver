@@ -7,38 +7,38 @@
 
     function printFrame(frame, elOrMsg) {
       elOrMsg = elOrMsg.tagName ? elOrMsg.tagName : elOrMsg;
-      console.log(`${elOrMsg} ${(frame.__id ??= ++count)} ${(frame instanceof ConstructionFrame ? frame.toString() : frame.tagName)}`);
+      console.log(`${elOrMsg} ${(frame.__id ??= ++count)} ${(frame.toString())}`);
     }
 
     // ConstructionFrame.observe('start', printFrame);
-    ConstructionFrame.observe('end', printFrame);
-    ConstructionFrame.observe('complete', printFrame);
+    ElementObserver.end( printFrame);
+    ElementObserver.complete( printFrame);
 
     customElements.define('inner-comp', class InnerComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ConstructionFrame.now, ` constructor`);
+        printFrame(ElementObserver.now, ` constructor`);
       }
     });
     customElements.define('middle-comp', class MiddleComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ConstructionFrame.now, ` constructor start`);
+        printFrame(ElementObserver.now, ` constructor start`);
         this.attachShadow({mode: "open"});
         this.shadowRoot.innerHTML = '<inner-comp></inner-comp>';
         this.shadowRoot.children[0].insertAdjacentHTML('afterend', '<h1></h1>');
-        printFrame(ConstructionFrame.now, ` constructor end`);
+        printFrame(ElementObserver.now, ` constructor end`);
       }
     });
     customElements.define('outer-comp', class OuterComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ConstructionFrame.now, ` constructor start`);
+        printFrame(ElementObserver.now, ` constructor start`);
         const a = document.createElement('middle-comp');
         const b = a.cloneNode();
         this.attachShadow({mode: "open"});
         this.shadowRoot.append(b);
-        printFrame(ConstructionFrame.now, ` constructor end`);
+        printFrame(ElementObserver.now, ` constructor end`);
       }
     });
   })();

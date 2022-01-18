@@ -11,7 +11,7 @@
     endedElements.push(...frame.nodes());
   }
 
-  ConstructionFrame.observe('end', printFrame);
+  ElementObserver.end( printFrame);
 
   customElements.define('web-comp', class WebComp extends HTMLElement {
     constructor() {

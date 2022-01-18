@@ -21,13 +21,13 @@
     //     an HTMLUnknownElement object. Not good.
     //
     // ConstructionFrame.observe('start', f => console.log(f.toString()));
-    ConstructionFrame.observe('end', (f, el) => console.log(f.toString() + " " + el.tagName));
-    ConstructionFrame.observe('complete', (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.end( (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.complete( (f, el) => console.log(f.toString() + " " + el.tagName));
 
     class WebComp extends HTMLElement {
       constructor() {
         super();
-        console.log(ConstructionFrame.now+ ' constructor');
+        console.log(ElementObserver.now+ ' constructor');
         throw new Error('test error');
       }
     }

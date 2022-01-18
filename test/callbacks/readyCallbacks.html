@@ -66,11 +66,11 @@
           ccbProp && Object.defineProperty(proto, 'connectedCallback', ccbProp);
         }
     });
-    ConstructionFrame.observe('end', (frame, el) => {
+    ElementObserver.end( (frame, el) => {
       // debugger
       el.attributeReadyCallback && callAttributeReady(el);
     });
-    ConstructionFrame.observe('complete', (frame, el) => el.childReadyCallback && callChildReady(el));
+    ElementObserver.complete( (frame, el) => el.childReadyCallback && callChildReady(el));
   })(customElements.define);
 
 </script>

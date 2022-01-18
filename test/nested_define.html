@@ -8,13 +8,13 @@
 <script>
   (function () {
 
-    ConstructionFrame.observe('end', (f, el) => console.log(f.toString() + " " + el.tagName));
-    ConstructionFrame.observe('complete', (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.end( (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.complete( (f, el) => console.log(f.toString() + " " + el.tagName));
 
     class CompTwo extends HTMLElement {
       constructor() {
         super();
-        console.log(ConstructionFrame.now + ' two');
+        console.log(ElementObserver.now + ' two');
         this.innerHTML = '<comp-one></comp-one>';
         console.log("constructor end comp two");
       }
@@ -24,7 +24,7 @@
     class CompOne extends HTMLElement {
       constructor() {
         super();
-        console.log(ConstructionFrame.now + ' one');
+        console.log(ElementObserver.now + ' one');
         try{
           customElements.define("comp-two", CompTwo);
         } catch(err){

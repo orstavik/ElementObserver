@@ -37,13 +37,13 @@
     }
 
     // ConstructionFrame.observe('start', printFrame);
-    ConstructionFrame.observe('end', printFrame);
-    ConstructionFrame.observe('complete', printFrame);
+    ElementObserver.end( printFrame);
+    ElementObserver.complete( printFrame);
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {
         super();
-        printFrame(ConstructionFrame.now, '-constructor');
+        printFrame(ElementObserver.now, '-constructor');
       }
     });
   })();
