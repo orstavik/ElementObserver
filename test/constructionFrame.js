@@ -41,7 +41,7 @@
       this.#parent?.#children.push(this);
     }
 
-    *descendants (){                 //todo the cb should not have anything but the element.
+    * descendants() {                 //todo the cb should not have anything but the element.
       yield this;                    // then the frame is only a string
       for (let c of this.#children)  // the state of the frame, is that necessary? Or is it only necessary to know the now? yes, only now..
         yield* c.descendants();
@@ -61,7 +61,7 @@
 
     end() {
       now = this.#parent;
-      if(this.#parent)
+      if (this.#parent)
         return;
       for (let c of this.descendants()) {
         c.#state = 'complete';
@@ -151,18 +151,13 @@
 
   function onParserBreak(e) {
     now = undefined; //if there is a predictive frame, then let it loose.
-    let parserFrame;
-    //it is a problem to run this in "first end tag read", because this is not simply a reverse call..
-    for (let ended of e.endedNodes()) {
-      if (ended instanceof Element) {
-        const predictiveFrame = frames.get(ended);
-        if (predictiveFrame)
-          predictiveFrame.callEnd(ended), predictiveFrame.end();
-        else
-          (parserFrame = new ConstructionFrame("Parser")), parserFrame.callEnd(ended), parserFrame.end();
-      }
+    for (let ended of e.endedElements()) {       //it is a problem to run this in "first end tag read", because this is not simply a reverse call..
+      // if (ended instanceof Element) {
+        const frame = frames.get(ended) || new ConstructionFrame("Parser");
+        frame.callEnd(ended);
+        frame.end();
+      // }
     }
-    // parserFrame?.end();
   }
 
   window.addEventListener('parser-break', onParserBreak, true);
