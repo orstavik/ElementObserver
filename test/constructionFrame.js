@@ -13,7 +13,7 @@
     }
 
     static get now() {
-      return now;
+      return now.toString();
     }
   }
 

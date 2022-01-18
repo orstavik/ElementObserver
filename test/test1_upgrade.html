@@ -32,11 +32,9 @@
 <script src="constructionFrame.js"></script>
 <script>
   (function () {
-    let count = 0;
-
     function printFrame(frame, elOrMsg) {
       elOrMsg = elOrMsg.tagName ? elOrMsg.tagName : elOrMsg;
-      console.log(frame.__id ??= ++count, frame + elOrMsg);
+      console.log(frame + elOrMsg);
     }
 
     ElementObserver.end(el => printFrame(ElementObserver.now, el));

@@ -3,11 +3,9 @@
 <script src="constructionFrame.js"></script>
 <script>
   (function () {
-    let count = 0;
-
     function printFrame(frame, elOrMsg) {
       elOrMsg = elOrMsg.tagName ? elOrMsg.tagName : elOrMsg;
-      console.log(`${elOrMsg} ${(frame.__id ??= ++count)} ${(frame.toString())}`);
+      console.log(`${elOrMsg} ${frame}`);
     }
 
     ElementObserver.end(el => printFrame(ElementObserver.now, el));
