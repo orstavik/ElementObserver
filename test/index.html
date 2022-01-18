@@ -65,13 +65,14 @@
       "H3 16 Parser#complete",
       "SCRIPT 16 Parser#complete",
       "constructor  17 Predictive#start",
-      "WEB-COMP 17 Predictive#end",
-      "WEB-COMP 17 Predictive#complete",
       "HTML 18 Parser#end",
       "BODY 18 Parser#end",
+      "WEB-COMP 17 Predictive#end",
+      "WEB-COMP 17 Predictive#complete",
       "HTML 18 Parser#complete",
       "BODY 18 Parser#complete",
-      "interactive"]
+      "interactive"
+    ]
   </script>
 </test-html>
 <test-html test="test2.html">
@@ -107,6 +108,8 @@
       " constructor end 10 Predictive#start, CloneNode#start",
       "MIDDLE-COMP 10 Predictive#start, CloneNode#end",
       " constructor end 6 Predictive#start",
+      "HTML 13 Parser#end",
+      "BODY 13 Parser#end",
       "OUTER-COMP 6 Predictive#end",
       "OUTER-COMP 6 Predictive#complete",
       "MIDDLE-COMP 7 Predictive#complete, DocumentCreateElement#complete",
@@ -115,8 +118,6 @@
       "MIDDLE-COMP 10 Predictive#complete, CloneNode#complete",
       "INNER-COMP 11 Predictive#complete, CloneNode#complete, InnerHTML#complete",
       "H1 12 Predictive#complete, CloneNode#complete, InsertAdjacentHTML#complete",
-      "HTML 13 Parser#end",
-      "BODY 13 Parser#end",
       "HTML 13 Parser#complete",
       "BODY 13 Parser#complete"
     ]
@@ -210,12 +211,12 @@
       "Predictive#start, DocumentCreateElement#start constructor-inner",
       "error",
       "Predictive#start, DocumentCreateElement#end INNER-COMP",
-      "Predictive#end OUTER-COMP",
-      "Predictive#complete OUTER-COMP",
-      "Predictive#complete, DocumentCreateElement#complete INNER-COMP",
       "Parser#end HTML",
       "Parser#end HEAD",
       "Parser#end BODY",
+      "Predictive#end OUTER-COMP",
+      "Predictive#complete OUTER-COMP",
+      "Predictive#complete, DocumentCreateElement#complete INNER-COMP",
       "Parser#complete HTML",
       "Parser#complete HEAD",
       "Parser#complete BODY"
@@ -310,6 +311,7 @@
       "Parser#end SPAN",
       "Parser#end SCRIPT",
       "InsertAdjacentHTML#end H5",
+      "InsertAdjacentHTML#end H55",
       "InsertAdjacentHTML#end H6",
       "Parser#end HTML",
       "Parser#end BODY"
@@ -326,6 +328,7 @@
       "Parser#end SPAN",
       "Parser#end SCRIPT",
       "InsertAdjacentHTML#end H5",
+      "InsertAdjacentHTML#end H55",
       "InsertAdjacentHTML#end H6",
       "Parser#end HTML",
       "Parser#end BODY"
@@ -385,11 +388,11 @@
       "Parser#end SCRIPT",
       ["HTML", "BODY"],
       "constructor",
-      "Predictive#end WEB-COMP",
-      ["HTML", "BODY"],
       "Parser#end HTML",
-      ["BODY"],
+      ["BODY", "WEB-COMP"],
       "Parser#end BODY",
+      ["WEB-COMP"],
+      "Predictive#end WEB-COMP",
       [],
       "interactive"
     ]

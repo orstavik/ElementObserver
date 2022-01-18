@@ -65,9 +65,7 @@
         cb(this, element);
     }
 
-    end(elements) {
-      for (let e of elements)
-        this.callEnd(e);
+    end() {
       !this.#parent && this.#complete();
       now = this.#parent;
     }
@@ -76,32 +74,42 @@
   function innerHTML_constructionFrame(og, val) {
     const frame = new ConstructionFrame("InnerHTML");
     og.call(this, val);
-    frame.end(this.querySelectorAll('*'));
+    for (let el of this.querySelectorAll('*'))
+      frame.callEnd(el);
+    frame.end();
   }
 
   MonkeyPatch.monkeyPatchSetter(Element.prototype, "innerHTML", innerHTML_constructionFrame);
   MonkeyPatch.monkeyPatchSetter(ShadowRoot.prototype, "innerHTML", innerHTML_constructionFrame);
 
-  MonkeyPatch.monkeyPatch(Node.prototype, "cloneNode", function cloneNode_constructionFrame(og, ...args) {
+  MonkeyPatch.monkeyPatch(Node.prototype, "cloneNode", function cloneNode_constructionFrame(og, deep, ...args) {
     const frame = new ConstructionFrame("CloneNode");
-    const clone = og.call(this, ...args);
-    frame.end([clone, ...clone.querySelectorAll('*')]);
+    const clone = og.call(this, deep, ...args);
+    frame.callEnd(clone);
+    if (deep)
+      for (let el of clone.querySelectorAll('*'))
+        frame.callEnd(el);
+    frame.end();
     return clone;
   });
 
   MonkeyPatch.monkeyPatch(Document.prototype, "createElement", function createElement_constructionFrame(og, ...args) {
     const frame = new ConstructionFrame("DocumentCreateElement");
     const created = og.call(this, ...args);
-    frame.end([created]);
+    frame.callEnd(created)
+    frame.end();
     return created;
   });
 
   MonkeyPatch.monkeyPatch(Element.prototype, "insertAdjacentHTML", function insertAdjacentHTML_constructHtmlElement(og, position, ...args) {
     const frame = new ConstructionFrame("InsertAdjacentHTML");
     const root = position === 'beforebegin' || position === 'afterend' ? this.parentNode : this;
-    const before = root && [...root.children];//checking for root in order to get good error messages for missing parent on beforebegin and afterend.
+    const before = root && [...root.querySelectorAll('*')];//checking for root in order to get good error messages for missing parent on beforebegin and afterend.
     og.call(this, position, ...args);
-    frame.end([...root.children].filter(el => before.indexOf(el) === -1));
+    for (let el of root.querySelectorAll('*'))   //todo run this in reverse
+      if (!before || before.indexOf(el) === -1)
+        frame.callEnd(el);
+    frame.end();
   });
   /*
    * UPGRADE, depends on ConstructionFrame
@@ -119,7 +127,7 @@
     if (upgradeStart)                      //no upgrade
       upgradeStart = undefined;
     else                                   //end last upgrade
-      now.end([frameToEl.get(now)]);
+      now.callEnd(frameToEl.get(now)), now.end();
   });
 
   window.HTMLElement = class UpgradeConstructionFrameHTMLElement extends HTMLElement {
@@ -128,7 +136,7 @@
       if (upgradeStart)
         upgradeStart = undefined, frameToEl.set(new ConstructionFrame("Upgrade"), this);
       else if (!upgradeStart && frameToEl.has(now))
-        now.end([frameToEl.get(now)]), frameToEl.set(new ConstructionFrame("Upgrade"), this);
+        now.callEnd(frameToEl.get(now)), now.end(), frameToEl.set(new ConstructionFrame("Upgrade"), this);
     }
   }
 
@@ -142,18 +150,18 @@
 
   function onParserBreak(e) {
     now = undefined; //if there is a predictive frame, then let it loose.
-    const parser = [];
-    let endedNodes = [...e.endedNodes()];
+    let parserFrame;
+    let endedNodes = [...e.endedNodes()];                    //todo run this in reverse?
     for (let ended of endedNodes) {
       if (ended instanceof Element) {
         const predictiveFrame = frames.get(ended);
         if (predictiveFrame)
-          predictiveFrame.end([ended]);
+          predictiveFrame.callEnd(ended), predictiveFrame.end();
         else
-          parser.push(ended);
+          (parserFrame ??= new ConstructionFrame("Parser")).callEnd(ended);
       }
     }
-    parser.length && new ConstructionFrame("Parser").end(parser);
+    parserFrame?.end();
   }
 
   window.addEventListener('parser-break', onParserBreak, true);
