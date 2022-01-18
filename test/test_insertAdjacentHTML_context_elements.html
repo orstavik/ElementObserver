@@ -3,13 +3,13 @@
 <script src="constructionFrame.js"></script>
 
 <script>
-  ElementObserver.end( (frame, el) => console.log(frame + " " + el.tagName));
+  ElementObserver.end(el => console.log(ElementObserver.now + " " + el.tagName));
 </script>
 
 <div>a<h1>b</h1>c<span>d</span>e</div>
 
 <script>
-  document.querySelector('span').insertAdjacentHTML('beforeend', '<' +'!-'+'-' + 'hello world' + '-->');
+  document.querySelector('span').insertAdjacentHTML('beforeend', '<' + '!-' + '-' + 'hello world' + '-->');
   document.querySelector('span').insertAdjacentHTML('afterend', 'hello sunshine');
   document.querySelector('h1').insertAdjacentHTML('beforebegin', '<h5>hello h5<h55>h55</h55></h5>');
   document.querySelector('h1').insertAdjacentHTML('beforeend', 'inserted text');

@@ -10,7 +10,7 @@
 
   const endedElements = [...allElements()].filter(n =>  !( document.currentScript.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_CONTAINS));
 
-  function printFrame(frame, el) {
+  function printFrame(el, frame = ElementObserver.now) {
     endedElements.push(el);
     console.log(frame + " "  + el.tagName);
     console.log([...allElements()].filter(n => endedElements.indexOf(n) === -1).map(n => n.tagName));

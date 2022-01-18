@@ -51,7 +51,7 @@
       this.#state = 'end';
       this.#elements.push(element);
       for (let cb of endObservers)
-        cb(this, element);
+        cb(element);
     }
 
     end() {

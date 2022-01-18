@@ -18,7 +18,7 @@
     // ElementObserver.complete( printFrame);
     //
     // ConstructionFrame.observe('start', f => console.log(f.toString()));
-    ElementObserver.end( (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.end(el => console.log(ElementObserver.now + " " + el.tagName));
     ElementObserver.complete( (f, el) => console.log(f.toString() + " " + el.tagName));
 
     class AttributeComp extends HTMLElement {

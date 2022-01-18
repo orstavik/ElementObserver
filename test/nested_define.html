@@ -8,7 +8,7 @@
 <script>
   (function () {
 
-    ElementObserver.end( (f, el) => console.log(f.toString() + " " + el.tagName));
+    ElementObserver.end(el => console.log(ElementObserver.now + " " + el.tagName));
     ElementObserver.complete( (f, el) => console.log(f.toString() + " " + el.tagName));
 
     class CompTwo extends HTMLElement {

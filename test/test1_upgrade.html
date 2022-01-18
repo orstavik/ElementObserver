@@ -8,13 +8,16 @@
 </web-comp>
 
 <h3>This is a test of nested NO whitespace</h3>
-<web-comp><web-comp></web-comp></web-comp>
+<web-comp>
+  <web-comp></web-comp>
+</web-comp>
 
 <h3>This is a test of siblings NO whitespace</h3>
 <p>This will be treated as if it was nested,
   because there is no way to see the difference from JS when the constructor for the second web comp is called.
   Currently. Unfortunately.</p>
-<web-comp></web-comp><web-comp></web-comp>
+<web-comp></web-comp>
+<web-comp></web-comp>
 
 <h3>This is a test of sync script, x-1, x1</h3>
 <web-comp></web-comp>
@@ -36,9 +39,8 @@
       console.log(frame.__id ??= ++count, frame + elOrMsg);
     }
 
-    // ConstructionFrame.observe('start', printFrame);
-    ElementObserver.end( printFrame);
-    ElementObserver.complete( printFrame);
+    ElementObserver.end(el => printFrame(ElementObserver.now, el));
+    ElementObserver.complete(printFrame);
 
     customElements.define('web-comp', class WebComp extends HTMLElement {
       constructor() {

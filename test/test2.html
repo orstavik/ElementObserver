@@ -10,9 +10,8 @@
       console.log(`${elOrMsg} ${(frame.__id ??= ++count)} ${(frame.toString())}`);
     }
 
-    // ConstructionFrame.observe('start', printFrame);
-    ElementObserver.end( printFrame);
-    ElementObserver.complete( printFrame);
+    ElementObserver.end(el => printFrame(ElementObserver.now, el));
+    ElementObserver.complete(printFrame);
 
     customElements.define('inner-comp', class InnerComp extends HTMLElement {
       constructor() {
