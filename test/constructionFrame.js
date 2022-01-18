@@ -26,11 +26,6 @@
     #name;
 
     //todo simplify now.. #state.. do not expose the ConstructionFrame anymore? Or just expose it as a method that you can use to read the state at any given point.
-    //todo extract end and complete as external functions. that accepts both a frame and an element
-    //todo call end and complete on individual element only.
-    //todo split calling end from setting end state
-    //todo split out complete even more? how do we handle the recursive nature of complete if the frame graph doesn't hold the ended elements?
-    //todo extract the observers as an external entity.
 
     //todo childchangedCallback and the rec object. we also need to add those that are not flatdom slotted, but only directly slotted.
 
@@ -112,9 +107,7 @@
         frame.callEnd(el);
     frame.end();
   });
-  /*
-   * UPGRADE, depends on ConstructionFrame
-   */
+
   const frameToEl = new WeakMap();
   let upgradeStart;
   MonkeyPatch.monkeyPatch(CustomElementRegistry.prototype, "define", function createElement_constructionFrame(og, ...args) {
@@ -138,25 +131,20 @@
         upgradeStart = undefined, frameToEl.set(new ConstructionFrame("Upgrade"), this);
       else if (!upgradeStart && frameToEl.has(now))
         now.callEnd(frameToEl.get(now)), now.end(), frameToEl.set(new ConstructionFrame("Upgrade"), this);
-    }
+    }//todo this is wrong i think, i think that if we do an innerHTML from a script, that triggers upgrade, then we will have a problem.
   }
 
-  /*
-   * PREDICTIVE PARSER, depends on UPGRADE
-   */
   if (document.readyState !== 'loading')
     return;
 
   const frames = new WeakMap();
 
   function onParserBreak(e) {
-    now = undefined; //if there is a predictive frame, then let it loose.
-    for (let ended of e.endedElements()) {       //it is a problem to run this in "first end tag read", because this is not simply a reverse call..
-      // if (ended instanceof Element) {
-        const frame = frames.get(ended) || new ConstructionFrame("Parser");
-        frame.callEnd(ended);
-        frame.end();
-      // }
+    now = undefined;                      //when now is a predictive frame, then let it loose.
+    for (let el of e.endedElements()) {   //it is a problem to run this in "first end tag read", because this is not simply a reverse call..
+      now = frames.get(el) || new ConstructionFrame("Parser");
+      now.callEnd(el);
+      now.end();
     }
   }
 
