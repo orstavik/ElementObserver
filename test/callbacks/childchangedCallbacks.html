@@ -9,6 +9,8 @@
 <script src="../../MonkeyPatch/MonkeyPatch.js"></script>
 <script src="../constructionFrame.js"></script>
 <script>
+  //todo childchangedCallback and the rec object. we also need to add those that are not flatdom slotted, but only directly slotted.
+
   (function (addEventListener, removeEventListener) {
 
     const lastSeen = new WeakMap();

@@ -20,45 +20,39 @@
   class ConstructionFrame {
 
     #children = [];
-    #parent;
     #elements = [];
-    #name;
-
-    //todo simplify now.. #state.. do not expose the ConstructionFrame anymore? Or just expose it as a method that you can use to read the state at any given point.
-
-    //todo childchangedCallback and the rec object. we also need to add those that are not flatdom slotted, but only directly slotted.
 
     constructor(name) {
-      this.#name = name;
-      this.#parent = now;
+      this.name = name;
+      this.parent = now;
       now = this;
-      this.#parent?.#children.push(this);
+      this.parent?.#children.push(this);
     }
 
-    * descendants() {                 //todo the cb should not have anything but the element.
-      yield this;                    // then the frame is only a string
-      for (let c of this.#children)  // the state of the frame, is that necessary? Or is it only necessary to know the now? yes, only now..
+    * descendants() {
+      yield this;
+      for (let c of this.#children)
         yield* c.descendants();
     }
 
     toString() {
-      return (this.#parent ? this.#parent.toString() + ', ' : '') + this.#name;
+      return (this.parent ? this.parent.toString() + ', ' : '') + this.name;
     }
 
     callEnd(el) {
-      this.#elements.push(el);                 //todo we only need the top construction frame? yeah, for now. Better have the populated graph.
+      this.#elements.push(el);
       for (let cb of endObservers)
         cb(el);
     }
 
     end() {
-      now = this.#parent;
+      now = this.parent;
       if (!now)
-       for (let c of this.descendants()) {
-         for (let el of c.#elements)
-           for (let cb of completeObservers)
-             cb(el);
-       }
+        for (let c of this.descendants()) {
+          for (let el of c.#elements)
+            for (let cb of completeObservers)
+              cb(el);
+        }
     }
   }
 
@@ -97,7 +91,7 @@
     const root = position === 'beforebegin' || position === 'afterend' ? this.parentNode : this;
     const before = root && [...root.querySelectorAll('*')];//if root is parent, and there is no parent, the og.call will throw an error
     og.call(this, position, ...args);
-    for (let el of root.querySelectorAll('*'))   //todo run this in reverse
+    for (let el of root.querySelectorAll('*'))
       if (!before || before.indexOf(el) === -1)
         frame.callEnd(el);
     frame.end();
@@ -135,8 +129,7 @@
   const frames = new WeakMap();
 
   function onParserBreak(e) {
-    now = undefined;                      //when now is a predictive frame, then let it loose.
-    //todo here we can make a test that ensures that the endCallback is made if the constructor throws an Error.
+    now = undefined;            //when now is a predictive frame, then let it loose. When predictive frames fail, then it is simply lost. No problem.
     for (let el of e.endedElements()) {   //it is a problem to run this in "first end tag read", because this is not simply a reverse call..
       now = frames.get(el) || new ConstructionFrame("Parser");
       now.callEnd(el);
