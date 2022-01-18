@@ -1,5 +1,7 @@
 (function initConstructionFrameAPI() {
   let now;
+  const endObservers = [];
+  const completeObservers = [];
 
   window.ConstructionFrame = class ConstructionFrame {
 
@@ -9,37 +11,34 @@
     #elements = [];
     #name;
 
-    static #observers = {'end': [], 'complete': []};
+    //todo simplify now.. #state.. do not expose the ConstructionFrame anymore? Or just expose it as a method that you can use to read the state at any given point.
+    //todo extract end and complete as external functions. that accepts both a frame and an element
+    //todo call end and complete on individual element only.
+    //todo split calling end from setting end state
+    //todo split out complete even more? how do we handle the recursive nature of complete if the frame graph doesn't hold the ended elements?
+    //todo extract the observers as an external entity.
+
+    //todo childchangedCallback and the rec object. we also need to add those that are not flatdom slotted, but only directly slotted.
+
+    // static #observers = {'end': [], 'complete': []};
 
     constructor(name) {
-      this.#parent = now;
       this.#name = name;
+      this.#parent = now;
       now = this;
       this.#parent?.#children.push(this);
     }
 
-    #callObservers(state, elements) {
-      const observers = ConstructionFrame.#observers[this.#state = state];
+    #callComplete(elements) {
       for (let el of elements)
-        for (let cb of observers)
+        for (let cb of completeObservers)
           cb(this, el);
     }
 
     #complete() {
-      this.#callObservers('complete', this.elements());
+      this.#state = 'complete';
+      this.#callComplete(this.#elements);
       this.#children.forEach(frame => frame.#complete());
-    }
-
-    get parent() {
-      return this.#parent;
-    }
-
-    elements() {
-      return this.#elements;
-    }
-
-    get state() {
-      return this.#state;
     }
 
     toString() {
@@ -51,23 +50,14 @@
       return now;
     }
 
-    static dropNow() {
-      now = undefined;
-    }
-
     static observe(state, cb) {
-      this.#observers[state].push(cb);
-    }
-
-    static disconnect(state, cb) {
-      const pos = this.#observers[state].indexOf(cb);
-      pos >= 0 && this.#observers[state].splice(pos, 1);
+      (state === 'end' ? endObservers : completeObservers).push(cb);
     }
 
     callEnd(element) {
       this.#state = 'end';
       this.#elements.push(element);
-      for (let cb of ConstructionFrame.#observers['end'])
+      for (let cb of endObservers)
         cb(this, element);
     }
 
@@ -109,12 +99,9 @@
     og.call(this, position, ...args);
     frame.end([...root.children].filter(el => before.indexOf(el) === -1));
   });
-})();
-/*
- * UPGRADE, depends on ConstructionFrame
- */
-(function () {
-
+  /*
+   * UPGRADE, depends on ConstructionFrame
+   */
   const frameToEl = new WeakMap();
   let upgradeStart;
   MonkeyPatch.monkeyPatch(CustomElementRegistry.prototype, "define", function createElement_constructionFrame(og, ...args) {
@@ -128,16 +115,16 @@
     if (upgradeStart)                      //no upgrade
       upgradeStart = undefined;
     else                                   //end last upgrade
-      ConstructionFrame.now.end([frameToEl.get(ConstructionFrame.now)]);
+      now.end([frameToEl.get(now)]);
   });
 
   window.HTMLElement = class UpgradeConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
       super();
       if (upgradeStart)
-        frameToEl.set(new ConstructionFrame("Upgrade"), this), upgradeStart = undefined;
-      else if (!upgradeStart && frameToEl.has(ConstructionFrame.now))
-        ConstructionFrame.now.end([frameToEl.get(ConstructionFrame.now)]), frameToEl.set(new ConstructionFrame("Upgrade"), this);
+        upgradeStart = undefined, frameToEl.set(new ConstructionFrame("Upgrade"), this);
+      else if (!upgradeStart && frameToEl.has(now))
+        now.end([frameToEl.get(now)]), frameToEl.set(new ConstructionFrame("Upgrade"), this);
     }
   }
 
@@ -150,7 +137,7 @@
   const frames = new WeakMap();
 
   function onParserBreak(e) {
-    ConstructionFrame.dropNow(); //if there is a predictive frame, then let it loose.
+    now = undefined; //if there is a predictive frame, then let it loose.
     const parser = [];
     let endedNodes = [...e.endedNodes()];
     for (let ended of endedNodes) {
@@ -170,7 +157,7 @@
   class PredictiveConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
       super();
-      !upgradeStart && !ConstructionFrame.now && frames.set(this, new ConstructionFrame("Predictive"));
+      !upgradeStart && !now && frames.set(this, new ConstructionFrame("Predictive"));
     }
   }
 
