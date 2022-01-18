@@ -72,7 +72,13 @@
     }
 
     function checkChildChangedFromEvent(e) {
-      e.composedPath()[0].parentNode === this && checkChildChanged(this);
+      for (let el of e.composedPath()) {
+        if (el instanceof HTMLSlotElement)
+          continue;
+        if (el === this)
+          checkChildChanged(this);
+        return;   //slotchangeNipSlip
+      }
     }
 
     function checkChildChangedFromMO(mrs) {
