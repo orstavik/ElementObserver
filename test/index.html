@@ -399,3 +399,18 @@
   </script>
 </test-html>
 <script type="module" src="https://cdn.jsdelivr.net/gh/orstavik/TestHTML/TestHTML.js"></script>
+<script>
+  setTimeout(async function () {
+    for (let el of document.querySelectorAll('test-html')) {
+      el.shadowRoot.getElementById('clipboard').click();
+      const mainArray = JSON.parse(await navigator.clipboard.readText());
+      el.children[0].textContent = `
+    [
+${mainArray.map(row => '      ' + JSON.stringify(row)).join(',\n')}
+    ]
+`;
+      el.removeAttribute('ok');
+    }
+    console.log(document.body.innerHTML);
+  }, 1500);
+</script>
