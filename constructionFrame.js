@@ -1,4 +1,29 @@
-(function initConstructionFrameAPI() {
+(function () {
+  function injectClassWhileLoading(OG, superCnstr) {
+    if (document.readyState !== 'loading')
+      return;
+
+    function injectClass(cnstr, superCnstr) {
+      Object.setPrototypeOf(superCnstr, Object.getPrototypeOf(cnstr));
+      Object.setPrototypeOf(superCnstr.prototype, Object.getPrototypeOf(cnstr.prototype));
+      Object.setPrototypeOf(cnstr, superCnstr);
+      Object.setPrototypeOf(cnstr.prototype, superCnstr.prototype);
+    }
+
+    function dropClass(cnstr) {
+      Object.setPrototypeOf(cnstr, Object.getPrototypeOf(Object.getPrototypeOf(cnstr)));
+      Object.setPrototypeOf(cnstr.prototype, Object.getPrototypeOf(Object.getPrototypeOf(cnstr.prototype)));
+    }
+
+    injectClass(OG, superCnstr);
+    window.addEventListener('readystatechange', () => dropClass(OG), {once: true, capture: true});
+  }
+
+  function monkeyPatch(proto, prop, valueOrSet, hoFun, desc = Object.getOwnPropertyDescriptor(proto, prop)) {
+    desc[valueOrSet] = hoFun(desc[valueOrSet]);
+    Object.defineProperty(proto, prop, desc);
+  }
+
   let now;
   const endObservers = [];
   const completeObservers = [];
@@ -18,7 +43,6 @@
   }
 
   class ConstructionFrame {
-
     #children = [];
     #elements = [];
 
@@ -55,61 +79,71 @@
     }
   }
 
-  function innerHTML_constructionFrame(og, val) {
-    const frame = new ConstructionFrame("InnerHTML");
-    og.call(this, val);
-    for (let el of this.querySelectorAll('*'))
-      frame.callEnd(el);
-    frame.end();
+  function innerHTML_ho(og) {
+    return function innerHTML_constructionFrame(val) {
+      const frame = new ConstructionFrame("InnerHTML");
+      og.call(this, val);
+      for (let el of this.querySelectorAll('*'))
+        frame.callEnd(el);
+      frame.end();
+    }
   }
 
-  MonkeyPatch.monkeyPatchSetter(Element.prototype, "innerHTML", innerHTML_constructionFrame);
-  MonkeyPatch.monkeyPatchSetter(ShadowRoot.prototype, "innerHTML", innerHTML_constructionFrame);
+  monkeyPatch(Element.prototype, "innerHTML", "set", innerHTML_ho);
+  monkeyPatch(ShadowRoot.prototype, "innerHTML", "set", innerHTML_ho);
 
-  MonkeyPatch.monkeyPatch(Node.prototype, "cloneNode", function cloneNode_constructionFrame(og, deep, ...args) {
-    const frame = new ConstructionFrame("CloneNode");
-    const clone = og.call(this, deep, ...args);
-    frame.callEnd(clone);
-    if (deep)
-      for (let el of clone.querySelectorAll('*'))
-        frame.callEnd(el);
-    frame.end();
-    return clone;
+  monkeyPatch(Node.prototype, "cloneNode", "value", function (og) {
+    return function cloneNode_constructionFrame(deep, ...args) {
+      const frame = new ConstructionFrame("CloneNode");
+      const clone = og.call(this, deep, ...args);
+      frame.callEnd(clone);
+      if (deep)
+        for (let el of clone.querySelectorAll('*'))
+          frame.callEnd(el);
+      frame.end();
+      return clone;
+    }
   });
 
-  MonkeyPatch.monkeyPatch(Document.prototype, "createElement", function createElement_constructionFrame(og, ...args) {
-    const frame = new ConstructionFrame("DocumentCreateElement");
-    const created = og.call(this, ...args);  //todo we need a try catch around the frame so that it ends. This applies to most of the functions?
-    frame.callEnd(created)
-    frame.end();
-    return created;
+  monkeyPatch(Document.prototype, "createElement", "value", function (og) {
+    return function createElement_cf(...args) {
+      const frame = new ConstructionFrame("DocumentCreateElement");
+      const created = og.call(this, ...args);  //todo we need a try catch around the frame so that it ends. This applies to most of the functions?
+      frame.callEnd(created)
+      frame.end();
+      return created;
+    }
   });
 
-  MonkeyPatch.monkeyPatch(Element.prototype, "insertAdjacentHTML", function insertAdjacentHTML_constructHtmlElement(og, position, ...args) {
-    const frame = new ConstructionFrame("InsertAdjacentHTML");
-    const root = position === 'beforebegin' || position === 'afterend' ? this.parentNode : this;
-    const before = root && [...root.querySelectorAll('*')];//if root is parent, and there is no parent, the og.call will throw an error
-    og.call(this, position, ...args);
-    for (let el of root.querySelectorAll('*'))
-      if (!before || before.indexOf(el) === -1)
-        frame.callEnd(el);
-    frame.end();
+  monkeyPatch(Element.prototype, "insertAdjacentHTML", "value", function (og) {
+    return function insertAdjacentHTML_cf(position, ...args) {
+      const frame = new ConstructionFrame("InsertAdjacentHTML");
+      const root = position === 'beforebegin' || position === 'afterend' ? this.parentNode : this;
+      const before = root && [...root.querySelectorAll('*')];//if root is parent, and there is no parent, the og.call will throw an error
+      og.call(this, position, ...args);
+      for (let el of root.querySelectorAll('*'))
+        if (!before || before.indexOf(el) === -1)
+          frame.callEnd(el);
+      frame.end();
+    }
   });
 
   const frameToEl = new WeakMap();
   let upgradeStart;
-  MonkeyPatch.monkeyPatch(CustomElementRegistry.prototype, "define", function createElement_constructionFrame(og, ...args) {
-    try {
-      upgradeStart = true;
-      og.call(this, ...args);
-    } catch (err) {
-      upgradeStart = undefined;
-      throw err;
+  monkeyPatch(CustomElementRegistry.prototype, "define", "value", function (og) {
+    return function createElement_constructionFrame(...args) {
+      try {
+        upgradeStart = true;
+        og.call(this, ...args);
+      } catch (err) {
+        upgradeStart = undefined;
+        throw err;
+      }
+      if (upgradeStart)                      //no upgrade
+        upgradeStart = undefined;
+      else                                   //end last upgrade
+        now.callEnd(frameToEl.get(now)), now.end();
     }
-    if (upgradeStart)                      //no upgrade
-      upgradeStart = undefined;
-    else                                   //end last upgrade
-      now.callEnd(frameToEl.get(now)), now.end();
   });
 
   window.HTMLElement = class UpgradeConstructionFrameHTMLElement extends HTMLElement {
@@ -145,5 +179,5 @@
     }
   }
 
-  MonkeyPatch.injectClassWhileLoading(HTMLElement, PredictiveConstructionFrameHTMLElement);
+  injectClassWhileLoading(HTMLElement, PredictiveConstructionFrameHTMLElement);
 })();
