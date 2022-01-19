@@ -5,7 +5,7 @@
   <title>Title</title>
 </head>
 <body>
-<script src="https://cdn.jsdelivr.net/gh/orstavik/parse@latest/parse.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/orstavik/parse@v1.0.0/parse.js"></script>
 <script src="../../MonkeyPatch/MonkeyPatch.js"></script>
 <script src="../../constructionFrame.js"></script>
 <script>
@@ -88,7 +88,7 @@
     }
 
     const MO = new MutationObserver(checkChildChangedFromMO);
-    ElementObserver.complete( (frame, el) => el.childChangedCallback && setupChildChanged(el));
+    ElementObserver.complete(el => el.childChangedCallback && setupChildChanged(el));
   })(addEventListener, removeEventListener);
 
 </script>
@@ -118,9 +118,9 @@
       console.log("constructor frame frame");
     }
 
-    childChangedCallback(what) {
+    childChangedCallback(flat, oldFlat) {
       console.log(this.tagName);
-      console.log(what);
+      console.log(flat, oldFlat);
       this.shadowRoot.querySelector('slot').assign(...this.childNodes);
     }
   }

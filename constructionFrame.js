@@ -136,7 +136,7 @@
     }
   }
 
-  window.addEventListener('parser-break', onParserBreak, true);
+  window.addEventListener('parse', onParserBreak, true);
 
   class PredictiveConstructionFrameHTMLElement extends HTMLElement {
     constructor() {
