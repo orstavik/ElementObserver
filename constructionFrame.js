@@ -48,11 +48,10 @@
     end() {
       now = this.parent;
       if (!now)
-        for (let c of this.descendants()) {
+        for (let c of this.descendants())
           for (let el of c.#elements)
             for (let cb of completeObservers)
               cb(el);
-        }
     }
   }
 
