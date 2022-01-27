@@ -2,19 +2,16 @@
 
 An Observer for the different stages of DOM `Element` construction.
 
- 1. construction-start. Dispatched immediately *before* a new constructionFrame starts.
- 2. construction-end.   Dispatched immediately *after* a constructionFrame ends. Has one property,
-                        .ended which is the constructionFrame recently dropped.
-                        runs shadow-light, bottom-up, right-left.
- 3. construction-complete. Dispatched after a top constructionFrame ends. Has one property: .completed
-                        which is a top-down iterator of all the frames completed.
-                        runs light-shadow, top-down, left-right.
+ 1. `ElementObserver.end(cb)`: The `cb` function will be triggered as soon as the construction of an element is completed. When multiple elements are constructed simultaneously, then the `cb` will be called after all the `constructor()`, `connectedCallback()` and `attributeChangedCallback()` has been undertaken.
+ 2. `ElementObserver.complete(cb)`: The `cb` function is triggered as soon as an uppermost constructionFrame ends, and then light-dom-to-shadow-dom, top-down for each element constructed. This callback basically signals when the slotteed nodes of an element will be ready.
 
-The ConstructionFrame API depends on:
- 1. ParserBreakEvent event.
- 2. NoNewConstructorHTMLElement.
+Dependencies:
+ 1. `parse` event.
+ 2. NoNewConstructorHTMLElement. The NoNewContructorHTMLElement essentially ensures that no 'new HTMLElement()' constructor is called directly. This is a restriction that applies to native elements, and this restriction is extended to custom elements. The ConstructionFrame API will produce wrong events if used with 'new HTMLElement.constructor()'. To check for and produce this error is a little costly, and it is therefore not included in the `ElementObserver` API by default to make it faster in production.
 
-The NoNewContructorHTMLElement essentially ensures that no 'new HTMLElement()' constructor is called directly. This is a restriction that applies to native elements, and this restriction is extended to custom elements. The ConstructionFrame API will produce wrong events if used with 'new HTMLElement.constructor()', but error management is not included to make the ConstructionFrame API faster in production.
+## WhatIs: a construction frame?
+
+> todo documentation for old version below
 
 Whenever a custom element is defined and referenced in an HTMLElement construction method or template, then the browser will call all the callbacks *sync* for those elements as part of the construction process. This means that the construction HTMLElements nests and branch out as a tree when for example as a custom element creates a shadowDom with one or more other custom elements. We call the nodes in this graph for constructionFrames.
 
@@ -52,7 +49,8 @@ Whenever a custom element is defined and referenced in an HTMLElement constructi
 ```
  In this example, the constructionFrame will nest like this: `{ predictive:comp-a { innerHTML:comp-b { createElement:comp-c } } }`
 
-Problem 1: main document nests lightDom branches while loading
+### Problem 1: main document nests lightDom branches while loading
+
 While loading, the browser can create custom elements directly. And while loading, the browser's parser may be delayed for a long time while waiting for sync <scripts>. And with custom web components that direct layout, you need to load custom elements synchronously and block rendering to avoid FOUC. This creates a situation where you wish to mark the *end* of a construction frame as early as possible, ie. on a per element level. When we mark a construction frame for an individual element, the frame begins just before the start tag is read and ends when the end tag is read. As there is no possible means to know when the end tag is, the document frame would end as soon as possible after the end tag is read.
 
 The per element construction frames that are created when the predictive parser calls the custom element constructor directly is called a "predictive construction frame".

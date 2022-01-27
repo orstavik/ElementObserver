@@ -24,7 +24,7 @@
     Object.defineProperty(proto, prop, desc);
   }
 
-  let now;
+  let now;                     //todo the now must be accessed by the "no new HTMLElement()" security hatch.
   const endObservers = [];
   const completeObservers = [];
 
