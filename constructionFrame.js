@@ -141,7 +141,7 @@
       }
       if (upgradeStart)                      //no upgrade
         upgradeStart = undefined;
-      else                                   //end last upgrade
+      else if (document.readyState === "loading")   //end last upgrade
         now.callEnd(frameToEl.get(now)), now.end();
     }
   });

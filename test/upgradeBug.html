@@ -1,0 +1,12 @@
+<script src="https://cdn.jsdelivr.net/gh/orstavik/parse@v1.0.1/parse.js"></script>
+<script src="../constructionFrame.js"></script>
+
+<script>
+  ElementObserver.end(el => console.log("end " + el.tagName + ' ' + ElementObserver.now));
+</script>
+<web-comp>hello sunshine</web-comp>
+
+<script type="module">
+  customElements.define("web-comp", class WebComp extends HTMLElement {
+  });
+</script>
