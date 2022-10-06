@@ -1,3 +1,5 @@
+> Note! While the main document is loading, this plugin needs to alter the `window.HTMLElement` value so that for example `nativeEl instanceof HTMLElement` returns `false`. This is needed to get the correct callbacks when custom elements are declared and upgraded while the main document is loading (which is beneficial to avoid flash of unstyled content). This needs further investigations. Can it be avoided? Is there a workaround? 
+
 # ElementObserver
 
 An Observer for the different stages of DOM `Element` construction.
