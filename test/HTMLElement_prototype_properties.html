@@ -1,0 +1,17 @@
+<script>
+  window.test = Object.keys(HTMLElement.prototype);
+</script>
+<script src="https://cdn.jsdelivr.net/gh/orstavik/parse@v1.0.1/parse.js"></script>
+<script src="../constructionFrame.js"></script>
+<script>
+  window.test2 = Object.keys(HTMLElement.prototype);
+  console.log(test.length, test2.length);
+  for (let i = 0; i < test.length; i++)
+    if (test[i] !== test2[i])
+      console.log(test[i], test2[i]);
+</script>
+
+<div>
+  This test illustrate the bug of not operating against the same properties on the HTMLElement.
+  Todo, should we match all of them and add getters? Don't know the solution here.
+</div>

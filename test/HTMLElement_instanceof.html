@@ -1,0 +1,11 @@
+<h1>hello sunshine</h1>
+<script src="https://cdn.jsdelivr.net/gh/orstavik/parse@v1.0.1/parse.js"></script>
+<script src="../constructionFrame.js"></script>
+<script>
+  const h1 = document.querySelector("h1");
+  console.log(h1 instanceof HTMLElement);
+</script>
+
+<div>
+  This test illustrates a bug. HTMLElement will no longer work for instanceof checks.
+</div>
