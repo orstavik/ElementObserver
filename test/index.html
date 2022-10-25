@@ -461,6 +461,14 @@
     "end BODY Parser"
   ]</script>
 </test-html>
+<test-html test="test_error.html" ok="">
+  <script expected>["HEAD", "HTML", "BODY", "H1"]</script>
+</test-html>
+<test-html test="test_template_cloneNode.html" ok="">
+  <script expected>["HEAD", "H1", "TEMPLATE", "H2", "SCRIPT", "DIV", "H3", "SPAN", "STYLE", "HTML", "BODY"]</script>
+</test-html>
+
+<h3>Known bugs</h3>
 <test-html test="HTMLElement_prototype_properties.html" ok="">
   <script expected="">[[123, 123]]</script>
 </test-html>

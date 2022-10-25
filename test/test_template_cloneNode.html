@@ -1,0 +1,24 @@
+<script src="https://cdn.jsdelivr.net/gh/orstavik/parse@v1.0.0/parse.js"></script>
+<script src="../constructionFrame.js"></script>
+<script>
+  (function () {
+    ElementObserver.end(el => console.log(el.nodeName));
+  })();
+</script>
+
+<h1>hello</h1>
+
+<template>
+  <div>
+    <h3>hello</h3>
+    <span>template</span>
+    <style>h1 {color: blue;}</style>
+  </div>
+</template>
+
+<h2>sunshine</h2>
+
+<script>
+  const template = document.querySelector("template");
+  template.content.cloneNode(true);
+</script>

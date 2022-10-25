@@ -1,4 +1,4 @@
-(function () {
+(function (dispatchEventOG) {
   function injectClassWhileLoading(OG, superCnstr) {
     if (document.readyState !== 'loading')
       return;
@@ -63,10 +63,18 @@
       return (this.parent ? this.parent.toString() + ', ' : '') + this.name;
     }
 
+    static handleErrors(cb, el) {
+      try {
+        cb(el);
+      } catch (error) {
+        dispatchEventOG.call(window, new ErrorEvent("error", {error}));
+      }
+    }
+
     callEnd(el) {
       this.#elements.push(el);
       for (let cb of endObservers)
-        cb(el);
+        ConstructionFrame.handleErrors(cb, el);
     }
 
     end() {
@@ -75,7 +83,7 @@
         for (let c of this.descendants())
           for (let el of c.#elements)
             for (let cb of completeObservers)
-              cb(el);
+              ConstructionFrame.handleErrors(cb, el);
     }
   }
 
@@ -96,7 +104,7 @@
     return function cloneNode_constructionFrame(deep, ...args) {
       const frame = new ConstructionFrame("CloneNode");
       const clone = og.call(this, deep, ...args);
-      frame.callEnd(clone);
+      clone instanceof Element && frame.callEnd(clone); //avoid text, shadowRoot, comment nodes
       if (deep)
         for (let el of clone.querySelectorAll('*'))
           frame.callEnd(el);
@@ -180,4 +188,4 @@
   }
 
   injectClassWhileLoading(HTMLElement, PredictiveConstructionFrameHTMLElement);
-})();
+})(dispatchEvent); //todo protect more methods and classes here from other potential monkeypatches
