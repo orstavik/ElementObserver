@@ -1,4 +1,6 @@
-> Note! While the main document is loading, this plugin needs to alter the `window.HTMLElement` value so that for example `nativeEl instanceof HTMLElement` returns `false`. This is needed to get the correct callbacks when custom elements are declared and upgraded while the main document is loading (which is beneficial to avoid flash of unstyled content). This needs further investigations. Can it be avoided? Is there a workaround? 
+> Note! While the main document is loading, this plugin needs to alter the `window.HTMLElement` value so that for example `nativeEl instanceof HTMLElement` returns `false`. This is needed to get the correct callbacks when custom elements are declared and upgraded while the main document is loading (which is beneficial to avoid flash of unstyled content). This needs further investigations. Can it be avoided? Is there a workaround?
+
+> Note2! There is a racecondition that arise if we call a requestAnimationFrame() and then change the innerText of an element in there. This bug is not hunted down yet. We need to find out how this works.
 
 # ElementObserver
 
