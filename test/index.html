@@ -467,6 +467,9 @@
 <test-html test="test_template_cloneNode.html" ok="">
   <script expected>["HEAD", "H1", "TEMPLATE", "H2", "SCRIPT", "DIV", "H3", "SPAN", "STYLE", "HTML", "BODY"]</script>
 </test-html>
+<test-html test="upgrade_inside_module.html" ok="">
+  <script expected="">["HEAD", "EDIT-LIST", "SCRIPT", "HTML", "BODY"]</script>
+</test-html>
 
 <h3>Known bugs</h3>
 <test-html test="HTMLElement_prototype_properties.html" ok="">
