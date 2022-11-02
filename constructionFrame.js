@@ -27,8 +27,13 @@
   let now;                     //todo the now must be accessed by the "no new HTMLElement()" security hatch.
   const endObservers = [];
   const completeObservers = [];
+  const startObservers = [];
 
   window.ElementObserver = class ElementObserver {
+    static start(cb) {
+      startObservers.push(cb);
+    }
+
     static end(cb) {
       endObservers.push(cb);
     }
@@ -188,4 +193,12 @@
   }
 
   injectClassWhileLoading(HTMLElement, PredictiveConstructionFrameHTMLElement);
+
+  //see upgrade_from_template.md
+  const contentOG = Object.getOwnPropertyDescriptor(HTMLTemplateElement.prototype, "content").get;
+  Object.defineProperty(HTMLTemplateElement.prototype, "content", {
+    get: function () {
+      return contentOG.call(this).cloneNode(true);
+    }
+  });
 })(dispatchEvent); //todo protect more methods and classes here from other potential monkeypatches
