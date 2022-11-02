@@ -27,8 +27,8 @@
 <script>document.addEventListener('readystatechange', _ => console.log('dom interactive'), {once: true});</script>
 <web-comp></web-comp>
 
-<script src="https://cdn.jsdelivr.net/gh/orstavik/parse@1.0.3/parse.js"></script>
-<script src="../constructionFrame.js"></script>
+<script src="../constructionFrame.js">
+</script><script src="https://cdn.jsdelivr.net/gh/orstavik/parse@1.0.3/parse.js"></script>
 <script>
   (function () {
     ElementObserver.end(el => console.log("end " + el.tagName + ' ' + ElementObserver.now));
