@@ -1,5 +1,5 @@
-<script src="../constructionFrame.js">
-</script><script src="https://cdn.jsdelivr.net/gh/orstavik/parse@1.0.3/parse.js"></script>
+<script src="../constructionFrame.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/orstavik/parse@1.0.3/parse.js"></script>
 
 <script>
   ElementObserver.end(el => console.log(ElementObserver.now + " " + el.tagName));
@@ -8,7 +8,7 @@
 <div><h1></h1><span></span></div>
 
 <script>
-  document.querySelector('span').insertAdjacentHTML('beforeend', '<' +'!-'+'-' + 'hello world' + '-->');
+  document.querySelector('span').insertAdjacentHTML('beforeend', '<' + '!-' + '-' + 'hello world' + '-->');
   document.querySelector('span').insertAdjacentHTML('afterend', 'hello sunshine');
   document.querySelector('h1').insertAdjacentHTML('beforebegin', '<h5>hello h5<h55>h55</h55></h5>');
   document.querySelector('h1').insertAdjacentHTML('beforeend', 'inserted text');
