@@ -146,16 +146,25 @@
 <test-html test="a_HTMLElement_prototype_properties.html" ok="">
   <script expected="">[[123, 123]]</script>
 </test-html>
+<test-html test="error_predictive.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    "SCRIPT",
+    "con OUTER-COMP",
+    "error",
+    ["BODY", "OUTER-COMP"]
+  ]</script>
+</test-html>
 <test-html test="error_predictive_and_createElement.html" ok="">
   <script expected="">[
-    ["HTML","HEAD","BASE","SCRIPT","SCRIPT","SCRIPT"],
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
     "SCRIPT",
     "con OUTER-COMP",
     "con INNER-COMP",
     "error",
     "INNER-COMP",
     "HTMLUnknownElement",
-    ["BODY","OUTER-COMP"]
+    ["BODY", "OUTER-COMP"]
   ]</script>
 </test-html>
 

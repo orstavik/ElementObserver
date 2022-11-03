@@ -1,0 +1,17 @@
+<script>
+  document.addEventListener("parse", e => console.log(...e.detail.map(el => el.tagName)));
+</script>
+<script src="../startObserver.js"></script>
+<script>
+  window.addEventListener('error', e => (e.preventDefault(), console.log('error')));
+
+  customElements.define('outer-comp', class OuterComp extends HTMLElement {
+    constructor() {
+      super();
+      console.log('con ' + this.tagName);
+      illegalReference;
+    }
+  });
+</script>
+
+<outer-comp></outer-comp>
