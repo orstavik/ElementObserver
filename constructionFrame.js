@@ -27,13 +27,8 @@
   let now;                     //todo the now must be accessed by the "no new HTMLElement()" security hatch.
   const endObservers = [];
   const completeObservers = [];
-  const startObservers = [];
 
   window.ElementObserver = class ElementObserver {
-    static start(cb) {
-      startObservers.push(cb);
-    }
-
     static end(cb) {
       endObservers.push(cb);
     }
@@ -43,7 +38,7 @@
     }
 
     static get now() {
-      return now.toString();
+      return now?.toString();
     }
   }
 
