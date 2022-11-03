@@ -1,0 +1,27 @@
+<script>
+  document.addEventListener("parse", e => console.log(...e.detail.map(el => el.tagName)));
+</script>
+<script src="../startObserver.js"></script>
+<script>
+  customElements.define('web-comp', class WebComp extends HTMLElement {
+    constructor() {
+      super();
+      console.log("constructor: " + this.attributes.length)
+    }
+
+    connectedCallback() {
+      console.log("connectedCallback: " + this.attributes.length);
+    }
+
+    attributeChangedCallback() {
+      console.log("changedCallback: " + this.attributes.length);
+    }
+
+    static get observedAttributes() {
+      return ["a"];
+    }
+  });
+</script>
+<body>
+<web-comp a="1" b c></web-comp>
+</body>
