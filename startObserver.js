@@ -1,7 +1,7 @@
 (function (dispatchEventOG, addEventListenerOG, removeEventListenerOG) {
 
   function doDispatch(addedNodes) {
-    addedNodes.length && dispatchEventOG.call(document, new CustomEvent("parse", {detail: addedNodes}));
+    addedNodes.length && dispatchEventOG.call(document, new CustomEvent("element-created", {detail: addedNodes}));
   }
 
   doDispatch([...document.querySelectorAll("*")]);

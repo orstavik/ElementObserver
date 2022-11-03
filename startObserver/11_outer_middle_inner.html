@@ -1,5 +1,5 @@
 <script>
-  document.addEventListener("parse", e => console.log(...e.detail.map(el => el.tagName)));
+  document.addEventListener("element-created", e => console.log(...e.detail.map(el => el.tagName)));
 </script>
 <script src="../startObserver.js"></script>
 <script>
