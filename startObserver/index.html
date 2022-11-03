@@ -183,18 +183,42 @@
 </test-html>
 <test-html test="error_HTMLUnknownElement.html" ok="">
   <script expected="">[
-    ["HTML","HEAD","BASE","SCRIPT","SCRIPT","SCRIPT"],
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
     "SCRIPT",
     "con WEB-COMP",
-    ["BODY","WEB-COMP"],
+    ["BODY", "WEB-COMP"],
     "con WEB-COMP",
     "error",
     "WEB-COMP",
     "con WEB-COMP",
-    ["WEB-COMP","SCRIPT"],
+    ["WEB-COMP", "SCRIPT"],
     "WebComp",
     "HTMLUnknownElement",
     "WebComp"
+  ]</script>
+</test-html>
+<test-html test="error_upgrade_inner_adjacent_clone.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "ATTRIBUTE-COMP", "OUTER-COMP", "SCRIPT"],
+    "script",
+    "SCRIPT",
+    "accb  ATTRIBUTE-COMP",
+    "error",
+    "con   OUTER-COMP",
+    "con   ONCE-COMP",
+    "ONCE-COMP",
+    "con   ONCE-COMP",
+    "error",
+    "ONCE-COMP",
+    "OnceComp",
+    "accb  ATTRIBUTE-COMP",
+    "error",
+    ["DIV", "ATTRIBUTE-COMP"],
+    "accb  ATTRIBUTE-COMP",
+    "error",
+    "ATTRIBUTE-COMP",
+    "close OUTER-COMP"
   ]</script>
 </test-html>
 
