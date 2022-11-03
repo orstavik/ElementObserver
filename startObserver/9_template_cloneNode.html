@@ -1,0 +1,20 @@
+<script>
+  document.addEventListener("parse", e => console.log(...e.detail.map(el => el.tagName)));
+</script>
+<script src="../startObserver.js"></script>
+
+<h1>hello</h1>
+
+<template>
+  <div>
+    <h3>hello</h3>
+    <span>template</span>
+    <style>h1 {color: blue;}</style>
+  </div>
+</template>
+
+<h2>sunshine</h2>
+
+<script>
+  document.querySelector("template").content;
+</script>

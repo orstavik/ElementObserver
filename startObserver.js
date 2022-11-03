@@ -6,6 +6,14 @@
 
   doDispatch([...document.querySelectorAll("*")]);
 
+  //see upgrade_from_template.md
+  const contentOG = Object.getOwnPropertyDescriptor(HTMLTemplateElement.prototype, "content").get;
+  Object.defineProperty(HTMLTemplateElement.prototype, "content", {
+    get: function () {
+      return contentOG.call(this).cloneNode(true);
+    }
+  });
+
   if (document.readyState === 'loading') {
 
     function mrsToEls(mrs) {
