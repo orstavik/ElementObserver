@@ -1,0 +1,28 @@
+<script>
+  document.addEventListener("parse", e => console.log(...e.detail.map(el => el.tagName)));
+</script>
+<script src="../startObserver.js"></script>
+
+<web-comp></web-comp>
+<web-comp></web-comp>
+<script>console.log("script")</script>
+
+<script>
+
+  window.addEventListener('error', e => (console.log('error') & e.preventDefault()));
+
+  customElements.define('web-comp', class WebComp extends HTMLElement {
+    constructor() {
+      super();
+      console.log('con ' + this.tagName);
+      illegalReference;
+    }
+  });
+
+  for (let wc of document.querySelectorAll("web-comp"))
+    console.log(wc.constructor.name);
+  // When the constructor fails during upgrading, then the .constructor and prototype is still set to the custom type.
+  // In normal circumstances the .constructor and prototype is remains/is set to HTMLUnknownElement.
+  // Error inside constructor for upgrade and predictive parser works differently.
+  // This difference is not good. Which choice is better is a little difficult to ascertain.
+</script>

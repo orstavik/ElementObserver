@@ -20,6 +20,10 @@
       this.attachShadow({mode: "open"});
       const x = document.createElement('inner-comp');
       console.log(x.constructor.name);
+      // Normally, when the constructor fails, the element is set up with an HTMLUnknownElement constructor/prototype.
+      // This is a problematic choice made among other problematic choices.
+      // This should specify that for example that if a CustomAttribute constructor fails, the customAttribute
+      // should be set up with the generic CustomAttribute prototype.
     }
   });
 </script>

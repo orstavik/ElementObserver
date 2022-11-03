@@ -167,6 +167,20 @@
     ["BODY", "OUTER-COMP"]
   ]</script>
 </test-html>
+<test-html test="error_upgrade.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "WEB-COMP", "WEB-COMP", "SCRIPT"],
+    "script",
+    "SCRIPT",
+    "con WEB-COMP",
+    "error",
+    "con WEB-COMP",
+    "error",
+    "WebComp",
+    "WebComp"
+  ]</script>
+</test-html>
 
 <script type="module" src="https://cdn.jsdelivr.net/gh/orstavik/TestHTML@v1.0.2/TestHTML.js"></script>
 <script>
