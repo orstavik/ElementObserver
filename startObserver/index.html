@@ -1,4 +1,4 @@
-<h3>ConstructionFrame</h3>
+<h3>ElementObserver start</h3>
 <test-html test="1_explicit_body.html" ok="">
   <script expected="">[
     ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
@@ -219,6 +219,48 @@
     "error",
     "ATTRIBUTE-COMP",
     "close OUTER-COMP"
+  ]</script>
+</test-html>
+<test-html test="10_middle_inner.html" ok="">
+  <script expected="">[
+    ["HTML","HEAD","BASE","SCRIPT","SCRIPT","SCRIPT"],
+    "SCRIPT",
+    "open  MIDDLE-COMP",
+    "con INNER-COMP",
+    "INNER-COMP",
+    "H1",
+    "close MIDDLE-COMP",
+    ["BODY","MIDDLE-COMP"]
+  ]</script>
+</test-html>
+<test-html test="11_outer_middle_inner.html" ok="">
+  <script expected="">[
+    ["HTML","HEAD","BASE","SCRIPT","SCRIPT","SCRIPT"],
+    "SCRIPT",
+    ["BODY","H3"],
+    "con INNER-COMP",
+    "INNER-COMP",
+    "open  MIDDLE-COMP",
+    "con INNER-COMP",
+    "INNER-COMP",
+    "H1",
+    "close MIDDLE-COMP",
+    "MIDDLE-COMP",
+    "open  OUTER-COMP",
+    "open  MIDDLE-COMP",
+    "con INNER-COMP",
+    "INNER-COMP",
+    "H1",
+    "close MIDDLE-COMP",
+    "MIDDLE-COMP",
+    "open  MIDDLE-COMP",
+    "con INNER-COMP",
+    "INNER-COMP",
+    "H1",
+    "close MIDDLE-COMP",
+    "MIDDLE-COMP",
+    "close OUTER-COMP",
+    "OUTER-COMP"
   ]</script>
 </test-html>
 

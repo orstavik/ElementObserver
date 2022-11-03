@@ -1,0 +1,38 @@
+<script>
+  document.addEventListener("parse", e => console.log(...e.detail.map(el => el.tagName)));
+</script>
+<script src="../startObserver.js"></script>
+<script>
+  customElements.define('inner-comp', class InnerComp extends HTMLElement {
+    constructor() {
+      super();
+      console.log('con ' + this.tagName);
+    }
+  });
+  customElements.define('middle-comp', class MiddleComp extends HTMLElement {
+    constructor() {
+      super();
+      console.log('open  ' + this.tagName);
+      this.attachShadow({mode: "open"});
+      this.shadowRoot.innerHTML = '<inner-comp></inner-comp>';
+      this.shadowRoot.children[0].insertAdjacentHTML('afterend', '<h1></h1>');
+      console.log('close ' + this.tagName);
+    }
+  });
+  customElements.define('outer-comp', class OuterComp extends HTMLElement {
+    constructor() {
+      super();
+      console.log('open  ' + this.tagName);
+      const a = document.createElement('middle-comp');
+      const b = a.cloneNode();
+      this.attachShadow({mode: "open"});
+      this.shadowRoot.append(b);
+      console.log('close ' + this.tagName);
+    }
+  });
+</script>
+
+<h3>Test of shadowDom construction frames</h3>
+<inner-comp></inner-comp>
+<middle-comp></middle-comp>
+<outer-comp></outer-comp>
