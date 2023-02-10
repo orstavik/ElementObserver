@@ -67,3 +67,10 @@ We make "predictive construction frames" with a somewhat complex mechanism:
 5. For nested construction frame contexts, construction contexts start and end recursively. A predictive construction frame associated with a descendant element will always end before a predictive construction frame associated with an ancestor element.
 
 The ConstructionFrame API is a low level API. It is not intended to be used directly, but intended for use by other API such as attributeReadyCallback() and childReadyCallback() APIs. These APIs need mainly to listen for construction-end events so that they can trigger attributeReadyCallback() and childReadyCallback() at the correct time.
+
+## HowTo: run the test
+
+Clone the git repo, and then run the following terminal command in the root folder:
+`npx http-server . -p 3333 --cors`
+
+and open `http://localhost:3333/test/`.
