@@ -73,4 +73,4 @@ The ConstructionFrame API is a low level API. It is not intended to be used dire
 Clone the git repo, and then run the following terminal command in the root folder:
 `npx http-server . -p 3333 --cors`
 
-and open `http://localhost:3333/test/`.
+and open `http://localhost:3333/startObserver/` or `http://localhost:3333/test/`.
