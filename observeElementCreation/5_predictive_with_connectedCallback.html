@@ -1,6 +1,6 @@
 <script src="../observeElementCreation.js"></script>
 <script>
-  observeElementsCreation(e => console.log(...e.map(el => el.tagName)));
+  observeElementCreation(e => console.log(...e.map(el => el.tagName)));
   customElements.define("web-comp", class WebComp extends HTMLElement{
     connectedCallback() {
       console.log("connected");

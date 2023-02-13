@@ -2,9 +2,9 @@
 
   let firstTimers = [...document.querySelectorAll("*")];
   let observer;
-  window.observeElementsCreation = function observeElementsCreation(cb) {
+  window.observeElementCreation = function observeElementCreation(cb) {
     if(observer)
-      throw new Error("observeElementsCreation(cb) can only be called once.");
+      throw new Error("observeElementCreation(cb) can only be called once.");
     observer = cb;
     cb(firstTimers);
     firstTimers = undefined;
