@@ -1,0 +1,26 @@
+<script src="../observeElementCreation.js"></script>
+<script>
+  observeElementsCreation(e => console.log(...e.map(el => el.tagName)));
+</script>
+<script>
+  customElements.define('web-comp', class WebComp extends HTMLElement {
+    constructor() {
+      super();
+      console.log("constructor: " + this.attributes.length)
+    }
+
+    connectedCallback() {
+      console.log("connectedCallback: " + this.attributes.length);
+    }
+
+    attributeChangedCallback() {
+      console.log("changedCallback: " + this.attributes.length);
+    }
+
+    static get observedAttributes() {
+      return ["a"];
+    }
+  });
+</script>
+<web-comp a="1" b c></web-comp>
+<!--the implied body is not added yet.-->

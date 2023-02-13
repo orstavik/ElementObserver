@@ -1,0 +1,48 @@
+<script src="../observeElementCreation.js"></script>
+<script>
+  observeElementsCreation(e => console.log(...e.map(el => el.tagName)));
+</script>
+
+<attribute-comp a></attribute-comp>
+<outer-comp></outer-comp>
+<script>console.log("script")</script>
+
+<script>
+  window.addEventListener('error', e => (console.log('error') & e.preventDefault()));
+
+  customElements.define('attribute-comp', class AttributeComp extends HTMLElement {
+    attributeChangedCallback() {
+      console.log('accb  ' + this.tagName);
+      throw 'error';
+    }
+
+    static get observedAttributes() {
+      return ["a"];
+    }
+  });
+
+  customElements.define('once-comp', class OnceComp extends HTMLElement {
+    static once = 1;
+
+    constructor() {
+      super();
+      console.log('con   ' + this.tagName);
+      if (!OnceComp.once--) throw 'error';
+    }
+  });
+
+  customElements.define('outer-comp', class OuterComp extends HTMLElement {
+    constructor() {
+      super();
+      debugger
+      console.log('con   ' + this.tagName);
+      this.attachShadow({mode: "open"});
+      const once = document.createElement('once-comp');
+      const clone = once.cloneNode(); //throws
+      console.log(clone.constructor.name);
+      this.shadowRoot.innerHTML = '<div></div><attribute-comp a></attribute-comp>';  //throws
+      this.shadowRoot.children[0].insertAdjacentHTML('afterbegin', '<attribute-comp a></attribute-comp>'); //throws
+      console.log('close ' + this.tagName);
+    }
+  });
+</script>

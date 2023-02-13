@@ -1,0 +1,24 @@
+<script src="../observeElementCreation.js"></script>
+<script>
+  observeElementsCreation(e => console.log(...e.map(el => el.tagName)));
+</script>
+<script>
+  window.addEventListener('error', e => (console.log('error') & e.preventDefault()));
+  customElements.define('web-comp', class WebComp extends HTMLElement {
+    static count = 1;
+
+    constructor() {
+      super();
+      console.log('con ' + this.tagName);
+      if (WebComp.count++ === 2) throw 'error';
+    }
+  });
+</script>
+
+<web-comp></web-comp>
+<web-comp></web-comp>
+<web-comp></web-comp>
+<script>
+  for (let wc of document.querySelectorAll("web-comp"))
+    console.log(wc.constructor.name);
+</script>

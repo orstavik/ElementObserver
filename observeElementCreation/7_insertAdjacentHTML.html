@@ -1,0 +1,14 @@
+<script src="../observeElementCreation.js"></script>
+<script>
+  observeElementsCreation(e => console.log(...e.map(el => el.tagName)));
+</script>
+
+<div>a<h1>b</h1>c<span>d</span>e</div>
+
+<script>
+  document.querySelector('span').insertAdjacentHTML('beforeend', '<' + '!-' + '-' + 'hello world' + '--><i>hello</i><i>sunshine</i>');
+  document.querySelector('span').insertAdjacentHTML('afterend', '<b>hello</b> sunshine');
+  document.querySelector('h1').insertAdjacentHTML('beforebegin', '<h5>hello h5<h55>h55</h55></h5>');
+  document.querySelector('h1').insertAdjacentHTML('beforeend', 'inserted text');
+  document.querySelector('span').insertAdjacentHTML('afterbegin', '<h6>hello h6</h6>');
+</script>

@@ -1,0 +1,20 @@
+<script src="../observeElementCreation.js"></script>
+<script>
+  observeElementsCreation(e => console.log(...e.map(el => el.tagName)));
+</script>
+
+<h1>hello</h1>
+
+<template>
+  <div>
+    <h3>hello</h3>
+    <span>template</span>
+    <style>h1 {color: blue;}</style>
+  </div>
+</template>
+
+<h2>sunshine</h2>
+
+<script>
+  document.querySelector("template").content;
+</script>

@@ -1,0 +1,18 @@
+<script src="../observeElementCreation.js"></script>
+<script>
+  observeElementsCreation(e => console.log(...e.map(el => el.tagName)));
+</script>
+
+<script>
+  window.addEventListener('error', e => (e.preventDefault(), console.log('error')));
+
+  customElements.define('outer-comp', class OuterComp extends HTMLElement {
+    constructor() {
+      super();
+      console.log('con ' + this.tagName);
+      illegalReference;
+    }
+  });
+</script>
+
+<outer-comp></outer-comp>

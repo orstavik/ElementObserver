@@ -1,0 +1,270 @@
+<h3>ElementObserver start</h3>
+<test-html test="1_explicit_body.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    "SCRIPT",
+    "BODY",
+    "constructor: 0",
+    "changedCallback: 3",
+    "connectedCallback: 3",
+    "WEB-COMP"
+  ]</script>
+</test-html>
+<test-html test="2_implied_body.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    "SCRIPT",
+    "constructor: 0",
+    "changedCallback: 3",
+    "connectedCallback: 3",
+    ["BODY", "WEB-COMP"]
+  ]</script>
+</test-html>
+<test-html test="3_predictive_without_constructor.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "H3", "WEB-COMP", "WEB-COMP", "H3", "WEB-COMP", "WEB-COMP", "H3", "WEB-COMP", "WEB-COMP", "H3", "P", "WEB-COMP", "WEB-COMP", "H3", "WEB-COMP", "SCRIPT"],
+    "script",
+    ["H3", "SCRIPT"],
+    "WEB-COMP",
+    "interactive"
+  ]</script>
+</test-html>
+<test-html test="4_predictive_with_constructor.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "H3"],
+    "constructor",
+    "WEB-COMP",
+    "constructor",
+    ["WEB-COMP", "H3"],
+    "constructor",
+    "WEB-COMP",
+    "constructor",
+    ["WEB-COMP", "H3"],
+    "constructor",
+    "WEB-COMP",
+    "constructor",
+    ["WEB-COMP", "H3", "P"],
+    "constructor",
+    "WEB-COMP",
+    "constructor",
+    ["WEB-COMP", "H3"],
+    "constructor",
+    ["WEB-COMP", "SCRIPT"],
+    "script",
+    ["H3", "SCRIPT"],
+    "constructor",
+    "WEB-COMP",
+    "interactive"
+  ]</script>
+</test-html>
+<test-html test="5_predictive_with_connectedCallback.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "H3"],
+    "connected",
+    "WEB-COMP",
+    "connected",
+    "WEB-COMP",
+    "H3",
+    "connected",
+    "WEB-COMP",
+    "connected",
+    "WEB-COMP",
+    "H3",
+    "connected",
+    "WEB-COMP",
+    "connected",
+    "WEB-COMP",
+    ["H3", "P"],
+    "connected",
+    "WEB-COMP",
+    "connected",
+    "WEB-COMP",
+    "H3",
+    "connected",
+    "WEB-COMP",
+    "SCRIPT",
+    "script",
+    ["H3", "SCRIPT"],
+    "connected",
+    "WEB-COMP",
+    "interactive"
+  ]</script>
+</test-html>
+<test-html test="6_predictive_with_attributeChangedCallback.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "H3"],
+    "WEB-COMP",
+    "attributeChanged",
+    ["WEB-COMP", "H3"],
+    "WEB-COMP",
+    ["WEB-COMP", "H3"],
+    "WEB-COMP",
+    ["WEB-COMP", "H3", "P"],
+    "WEB-COMP",
+    ["WEB-COMP", "H3"],
+    ["WEB-COMP", "SCRIPT"],
+    "script",
+    ["H3", "SCRIPT"],
+    "WEB-COMP",
+    "interactive"
+  ]</script>
+</test-html>
+<test-html test="7_insertAdjacentHTML.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "DIV", "H1", "SPAN", "SCRIPT"],
+    ["I", "I"],
+    "B",
+    ["H5", "H55"],
+    "H6"
+  ]</script>
+</test-html>
+<test-html test="8_insertAdjacentHTML_intoEmpty.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "DIV", "H1", "SPAN", "SCRIPT"],
+    ["I", "I"],
+    "B",
+    ["H5", "H55"],
+    "H6"
+  ]</script>
+</test-html>
+<test-html test="9_template_cloneNode.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "H1", "TEMPLATE", "H2", "SCRIPT"],
+    ["DIV", "H3", "SPAN", "STYLE"]
+  ]</script>
+</test-html>
+<test-html test="a_HTMLElement_instanceof.html" ok="">
+  <script expected="">[true]</script>
+</test-html>
+<test-html test="a_HTMLElement_prototype_properties.html" ok="">
+  <script expected="">[[123, 123]]</script>
+</test-html>
+<test-html test="error_predictive.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    "SCRIPT",
+    "con OUTER-COMP",
+    "error",
+    ["BODY", "OUTER-COMP"]
+  ]</script>
+</test-html>
+<test-html test="error_predictive_and_createElement.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    "SCRIPT",
+    "con OUTER-COMP",
+    "con INNER-COMP",
+    "error",
+    "INNER-COMP",
+    "HTMLUnknownElement",
+    ["BODY", "OUTER-COMP"]
+  ]</script>
+</test-html>
+<test-html test="error_upgrade.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "WEB-COMP", "WEB-COMP", "SCRIPT"],
+    "script",
+    "SCRIPT",
+    "con WEB-COMP",
+    "error",
+    "con WEB-COMP",
+    "error",
+    "WebComp",
+    "WebComp"
+  ]</script>
+</test-html>
+<test-html test="error_HTMLUnknownElement.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    "SCRIPT",
+    "con WEB-COMP",
+    ["BODY", "WEB-COMP"],
+    "con WEB-COMP",
+    "error",
+    "WEB-COMP",
+    "con WEB-COMP",
+    ["WEB-COMP", "SCRIPT"],
+    "WebComp",
+    "HTMLUnknownElement",
+    "WebComp"
+  ]</script>
+</test-html>
+<test-html test="error_upgrade_inner_adjacent_clone.html" ok="">
+  <script expected="">[
+    ["HTML", "HEAD", "BASE", "SCRIPT", "SCRIPT", "SCRIPT"],
+    ["BODY", "ATTRIBUTE-COMP", "OUTER-COMP", "SCRIPT"],
+    "script",
+    "SCRIPT",
+    "accb  ATTRIBUTE-COMP",
+    "error",
+    "con   OUTER-COMP",
+    "con   ONCE-COMP",
+    "ONCE-COMP",
+    "con   ONCE-COMP",
+    "error",
+    "ONCE-COMP",
+    "OnceComp",
+    "accb  ATTRIBUTE-COMP",
+    "error",
+    ["DIV", "ATTRIBUTE-COMP"],
+    "accb  ATTRIBUTE-COMP",
+    "error",
+    "ATTRIBUTE-COMP",
+    "close OUTER-COMP"
+  ]</script>
+</test-html>
+<test-html test="10_middle_inner.html" ok="">
+  <script expected="">[
+    ["HTML","HEAD","BASE","SCRIPT","SCRIPT","SCRIPT"],
+    "SCRIPT",
+    "open  MIDDLE-COMP",
+    "con INNER-COMP",
+    "INNER-COMP",
+    "H1",
+    "close MIDDLE-COMP",
+    ["BODY","MIDDLE-COMP"]
+  ]</script>
+</test-html>
+<test-html test="11_outer_middle_inner.html" ok="">
+  <script expected="">[
+    ["HTML","HEAD","BASE","SCRIPT","SCRIPT","SCRIPT"],
+    "SCRIPT",
+    ["BODY","H3"],
+    "con INNER-COMP",
+    "INNER-COMP",
+    "open  MIDDLE-COMP",
+    "con INNER-COMP",
+    "INNER-COMP",
+    "H1",
+    "close MIDDLE-COMP",
+    "MIDDLE-COMP",
+    "open  OUTER-COMP",
+    "open  MIDDLE-COMP",
+    "con INNER-COMP",
+    "INNER-COMP",
+    "H1",
+    "close MIDDLE-COMP",
+    "MIDDLE-COMP",
+    "open  MIDDLE-COMP",
+    "con INNER-COMP",
+    "INNER-COMP",
+    "H1",
+    "close MIDDLE-COMP",
+    "MIDDLE-COMP",
+    "close OUTER-COMP",
+    "OUTER-COMP"
+  ]</script>
+</test-html>
+
+<script type="module" src="https://cdn.jsdelivr.net/gh/orstavik/TestHTML@v1.0.2/TestHTML.js"></script>
+<script>
+  setTimeout(_ => console.log(document.body.innerHTML), 1500);
+</script>
